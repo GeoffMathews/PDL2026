@@ -17,14 +17,33 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 </head>
 <body>
 
-    <h1>Materials for Calculating Stellar Lifespans</h1>
+    <h1>Materials for the Cepheid Period-Luminosity relationship</h1>
     
-    <p>This page links to materials developed or refined as part of developing the review video + text for Calculating Stellar Lifespans. </p> 
+    <p>This page links to materials developed or refined as part of developing the review video + text for the Cepheid Period-Luminosity relationship. </p> 
 
 <ul>
-    <li>Stellar lifespan calculator <a href=https://foothillastrosims.github.io/stellar-lifespan/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/stellar-lifespan target=_blank>source</a></li>
-    <li>Star graphics were edited from NASA resource "The Lives of Stars" (<a href=https://science.nasa.gov/resource/the-lives-of-stars/ target=_blank>original</a>)</li>
-    
+    <li>Cepheid Property explorer <a href=https://foothillastrosims.github.io/cepheid-lightcurve/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/cepheid-lightcurve target=_blank>source</a></li>
+    <li>Python <a href="Cepheid_model.ipynb" target=_blank>Jupyter notebook</a> for producing graphs based on Cepheid models of <a href="https://iopscience.iop.org/article/10.1088/0004-637X/748/2/107/meta" target="_blank">Pejcha and Kochanek, 2012</a></li>
+        <ul>
+            <li>V-band period-luminosity relation (simplified for use in video)  <img src="Cepheid_period_Vband_relation_noCite_simplifiedLabel.jpg" alt="Cepheid period luminosity relation, simplified"></li>
+            <li>lightcurve comparison for a 10 and a 25 day period Cepheid (not used in final video) <img src="Cepheid_lightcurve_comparison_10_25_days.jpg" alt="lightcurves for Cepheid stars with periods of 10 and 25 days, with average luminosities about 3000 and about 7500 times the sun"></li>
+            <li>period-luminosity relation (not used in final video) <img src="Cepheid_period_luminosity_relation.jpg" alt="Cepheid period luminosity relation"></li>
+            <li>V-band period-luminosity relation (not used in final video)  <img src="Cepheid_period_Vband_relation.jpg" alt="Cepheid period luminosity relation, V-band"></li>
+        </ul>
+    <li>Observations of Cepheid BASW1</li>
+        <ul>
+            <li>g-band postage stamps downloaded from <a href="https://irsa.ipac.caltech.edu/applications/ztf/?__action=layout.showDropDown&" target="_blank">ZTF archive</a>, selecting images from 06/02 - 08/30, 2018 (<a href="images.zip" target="_blank">download</a>)</li>
+            <li>used <a href="https://sites.google.com/cfa.harvard.edu/saoimageds9" target="_blank">DS9</a> to manually create animation and frame-mosaic of images</li>
+            <li><a href="BASW1-lightcurve.fits" target="_blank">lightcurve file</a> generated using <a href="https://irsa.ipac.caltech.edu/applications/Gator/index.html" target="_blank">ZTF catalog search</a>, data selection, and export of data to Time-Series tool </li>
+ <!--           <li>nice walkthrough at https://www.youtube.com/watch?v=K1RrOe7vDwc to download lightcurve of BASW1</li> -->
+            <li>Python <a href="Cepheid_lightcurve.ipynb" target=_blank>Jupyter notebook</a> for producing lightcurve graphs of BASW1</li>
+            <li>animation of BASW1 observations <img src="BASW1_multi_cycle.gif" alt="100 day timelapse of variable star BASW1"></li>
+            <li>mosaic of BASW1 observations <img src="BASW1_mosaic.jpg" alt="100 day mosaic of variable star BASW1"></li>
+            <li>100 day lighcurve of BASW1 <img src="BASW1_lightcurve_100days.jpg" alt="100 day lightcurve of BASW1"></li>
+
+        </ul>
+         
+
 </ul>
     
   <!-- Footer -->
