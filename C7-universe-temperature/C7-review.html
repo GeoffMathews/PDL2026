@@ -1,6 +1,6 @@
 <html> 
 <head>
-<title>Calculating Stellar Lifespans</title>
+<title>Calculating Temperature of the Universe</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
@@ -17,35 +17,45 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 </head>
 <body>
 
-    <h1>Calculating Stellar Lifespans</h1>
+    <h1>Calculating Temperature of the Universe</h1>
     
-    <p>Read the following text and watch the video to review how to use spectra to compare the temperatures of dense objects. </p> 
+    <p>Read the following text and watch the video to review how to use the spectrum of the cosmic microwave background to calculate the temperature of the universe. </p> 
 
-<p>A star finishes its formation process when it's core stabilizes - when it has been squeezed enough by gravity to reach a high enough temperature that the combined outward pressure from the gas and from fusion match the inward pull of gravity.  This will continue, with the star's properties staying basically constant until the core exhausts its supply of hydrogen.  We refer to the amount of time that a star stays stable, with a temperature and luminosity somewhere along the main sequence, as its main-sequence lifespan, often just abbreviated to lifespan.</p>
+<p>We can use the peak of the spectrum of the cosmic microwave background to calculate the temperature of empty space itself.</p>
 
-<p>The two things that determine a star's lifespan are how much fuel it has - which is set by its mass - and the rate that it is using its fuel - which is set by its luminosity.  A star that is twice as massive has twice as much fuel.  A star that is twice as bright is using its fuel twice as fast.  </p>
+    <ol>
+        <li>Find the peak of the cosmic microwave background spectrum</li>
+        <li>If reading a graph, drop down to the X-axis to read the wavelength of the peak</li>
+        <li>Compare that wavelength to the peak wavelength of an object with a known temperature.  Calculate the ratio of the two wavelengths.  Their temperatures will have the same ratio.</li>
+        <ul>
+            <li>if the universe peaks at a longer wavelength, it is cooler than the comparison object</li>
+            <li>if the universe peaks at a shorter wavelength, it is warmer than the comparison object</li>
+        </ul>
+    </ol>
 
-<p>So if we have a comparison of a star's mass and luminosity with the sun's mass and luminosity, we can also compare how long it will live.  More fuel shifts things to a longer life, while using that fuel faster shifts towards a shorter life.  The two effects together determine the overall comparison in lifespan.</p>
-
-    <iframe width="975" height="609" src="https://www.youtube.com/embed/pkQlsJPwcc8" title="Review 01 - stellar lifespan" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="1229" height="768" src="https://www.youtube.com/embed/MmOYqRcQluo" title="Review 07 - measuring the  temperature of the universe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     
     <h2>Explore</h2>
     
-<p>Use the <a class="inline_disabled" href="https://foothillastrosims.github.io/stellar-lifespan/" target="_blank" rel="noopener">Stellar Lifespan calculator</a> to explore the effect of a star's mass and luminosity on its lifespan.</p>    
+  
+ <p>Use the <a class="inline_disabled" href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-redshift-multi-with-multi-photon-and-spectrum" target="_blank" rel="noopener">Background radation simulator</a> (opens in new window) to develop a qualitative sense between the age of the universe and the redshift of the first-light that is reaching us in each era over time</p>    
 <ul>
-    <li>hit the START button to see how the model star runs through its fuel, and compare that to the sun.</li>
-    <li>try changing the mass of the star, which changes the amount of fuel the star has. Does having more fuel give the star a longer or shorter lifespan?  What about less fuel?</li>
-    <li>try changing the luminosity of the star, which changes how quickly the star uses its fuel. Does having a higher luminosity cause the star to have a a longer or shorter lifespan?  What about a lower luminosity?</li>
-    <li>explore what happens as both mass and luminosity differ.  How do those two factors combine to cause the lifespan to change?</li>
-    <li>activate the <emph>Realistic stars</emph> option.  What is the relationship between the mass and luminosity of real main-sequence stars?  What pattern in lifespan does this lead to for real stars?  Try completing this sentence: "Higher mass stars have _____ lifespans", and explain why using the underlying pattern between mass and luminosity. </li>
-
+    <li>set n-galaxies to 2 or 3, making a smaller simulated universe that is easier to examine for patterns.  Hit the Setup button</li>
+    <li>activate the Go button.  Each simulated galaxy sends:</li>
+        <ol>
+            <li>a vertical line of photons representing the first surviving spectrum, and</li>
+            <li>starts sending a representative photon (starting out violet, 400 nm) each 500 million years in the simulation</li>
+        </ol>
+    <li>when a set of "first-light" photons reach us, that redshifted spectrum is added to the graph below and the simulation pauses.  The initial distance of the sending galaxy and the current age of the universe is shown on the left</li>
+    <li>to continue the simulation, hit the Continue button, and then Go</li>
+    <li>over time, what happens to this spectrum that we measure for the first light that traveled through the universe?  This is a continuous spectrum, so can be interpreted as a temperature; what is happening to that background temperature over time?</li>
 </ul>
     
-<p><iframe src="https://foothillastrosims.github.io/stellar-lifespan/index.html" width="800px" height="300px" loading="lazy" data-mce-fragment="1"></iframe></p>    
-    
+<!-- <p><iframe src="https://foothillastrosims.github.io/Spectrum-Constructor/" width="800px" height="800px" loading="lazy" data-mce-fragment="1"></iframe></p> 
+ -->    
     <h2>Early draft video</h2>
 
-    <iframe width="877" height="493" src="https://www.youtube.com/embed/dZwstjTt66Y" title="Review 01 (long) - how to calculate main-sequence lifespans" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="1229" height="768" src="https://www.youtube.com/embed/XGs_Hw5MLUY" title="Review 07 (full, with background) - determining the temperature of the universe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     
   <!-- Footer -->
   <footer class="w3-row-padding w3-padding-32">
