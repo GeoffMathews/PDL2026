@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gravitational Lensing: Vertical Field Simulation</title>
+  <style>
+    :root {
+      --bg-color: #0b0e14;
+      --panel-bg: #151922;
+      --panel-border: #2a3142;
+      --accent-color: #00f0ff;
+      --accent-amber: #facc15;
+      --accent-red: #ef4444;
+      --text-main: #e1e7ec;
+      --text-muted: #8c9bae;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--panel-bg);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 0.85rem 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+      .main-container {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .canvas-card {
+      flex: 1;
+      width: 100%;
+      background-color: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 3 / 4;
+      margin: 0 auto;
+      background-color: #04060a;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .calc-box {
+      background: rgba(10, 14, 22, 0.7);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8rem;
+      color: #d1d5db;
+    }
+
+    .calc-box h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-color);
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.4rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.85rem 1.25rem;
+    }
+
+    .calc-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .calc-item .label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .calc-item .value {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .calc-item .highlight {
+      color: var(--accent-amber);
+    }
+
+    .calc-footer {
+      margin-top: 0.85rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .calc-footer .formula {
+      color: #9ca3af;
+    }
+
+    .controls-panel {
+      width: 100%;
+      max-width: 380px;
+      background-color: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .control-group.disabled-control {
+      opacity: 0.35;
+    }
+
+    .control-group label {
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group label span {
+      color: var(--accent-color);
+      font-family: monospace;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #2a3142;
+      outline: none;
+    }
+
+    input[type="range"]:disabled {
+      cursor: not-allowed;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-color);
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"]:disabled::-webkit-slider-thumb {
+      background: #6b7280;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover:not(:disabled) {
+      transform: scale(1.2);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      color: var(--text-main);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #2a3142;
+      transition: .2s;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-color);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .legend {
+      border-top: 1px solid var(--panel-border);
+      padding-top: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 4px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gravitational Deflection of Light Fan</h1>
+    <p>Vertical Propagation View (Distant Galaxy at Top, Earth at Bottom)</p>
+  </header>
+
+  <div class="main-container">
+    <div class="canvas-card">
+      <div class="canvas-wrapper">
+        <canvas id="simCanvas"></canvas>
+      </div>
+
+      <!-- Numerical Output Box below Graphic -->
+      <div class="calc-box">
+        <h3>Numerical Results</h3>
+        <div class="calc-grid">
+          <div class="calc-item">
+            <span class="label">Galaxy Distance:</span>
+            <span class="value" id="boxDistG">8.0 billion light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Galaxy Offset:</span>
+            <span class="value" id="boxOffsetX">0 thousand light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Cluster Distance:</span>
+            <span class="value" id="boxDistC">4.0 billion light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Galaxy-Cluster Distance:</span>
+            <span class="value" id="boxDistGC">4.0 billion light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Cluster Mass:</span>
+            <span class="value" id="boxMass">200 trillion solar masses</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Ray Mode:</span>
+            <span class="value" id="boxMode">Single Ray</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Cluster Impact:</span>
+            <span class="value highlight" id="boxImpactRange">290.9 thousand light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Earth Impact:</span>
+            <span class="value highlight" id="boxEarthImpactRange">581.8 thousand light-years</span>
+          </div>
+          <div class="calc-item">
+            <span class="label">Deflection Angle:</span>
+            <span class="value highlight" id="boxAlphaRange">44.3 arc-seconds</span>
+          </div>
+        </div>
+        <div class="calc-footer">
+          <span class="label">Theoretical Formula:</span>
+          <span class="formula">α̂ = 4GM / (c²|b<sub>C</sub>|) &nbsp;|&nbsp; b<sub>E</sub> = b<sub>C</sub> + d<sub>C</sub> tan(θ − sgn(b<sub>C</sub>)α̂)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-panel">
+      <div class="toggle-row">
+        <span>Enable Intermediate Cluster</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleCluster" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label for="sliderDistG">
+          1. Distance to Galaxy:
+          <span id="valDistG">8.0 billion light-years</span>
+        </label>
+        <input type="range" id="sliderDistG" min="2.0" max="13.0" step="0.1" value="8.0">
+      </div>
+
+      <div class="control-group">
+        <label for="sliderOffsetX">
+          2. Galaxy Horizontal Offset:
+          <span id="valOffsetX">0 thousand light-years</span>
+        </label>
+        <input type="range" id="sliderOffsetX" min="-500" max="500" step="10" value="0">
+      </div>
+
+      <div class="control-group" id="grpDistC">
+        <label for="sliderDistC">
+          3. Distance to Cluster:
+          <span id="valDistC">4.0 billion light-years</span>
+        </label>
+        <input type="range" id="sliderDistC" min="1.0" max="12.0" step="0.1" value="4.0">
+      </div>
+
+      <div class="control-group" id="grpMass">
+        <label for="sliderMass">
+          4. Cluster Mass:
+          <span id="valMass">200 trillion solar masses</span>
+        </label>
+        <input type="range" id="sliderMass" min="100" max="1000" step="10" value="200">
+      </div>
+
+      <div class="control-group">
+        <label for="sliderNumRays">
+          5. Number of Light Rays:
+          <span id="valNumRays">1</span>
+        </label>
+        <input type="range" id="sliderNumRays" min="1" max="10" step="1" value="1">
+      </div>
+
+      <div class="control-group" id="grpFanSpread">
+        <label for="sliderFanSpread">
+          6. Ray Fan Spread:
+          <span id="valFanSpread">20 arc-seconds</span>
+        </label>
+        <input type="range" id="sliderFanSpread" min="10" max="40" step="1" value="20">
+      </div>
+
+      <div class="control-group" id="grpTheta">
+        <label for="sliderTheta">
+          7. Initial Ray Direction (1 ray):
+          <span id="valTheta">+15.0 arc-seconds</span>
+        </label>
+        <input type="range" id="sliderTheta" min="-40.0" max="40.0" step="0.5" value="15.0">
+      </div>
+
+      <div class="toggle-row">
+        <span>Enable Post-Lensing Scale</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleManualScale">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="control-group disabled-control" id="grpExaggeration">
+        <label for="sliderExaggeration">
+          Post-Lensing Scale Factor:
+          <span id="valExaggeration">1.00x</span>
+        </label>
+        <input type="range" id="sliderExaggeration" min="0.01" max="1.00" step="0.01" value="1.00" disabled>
+      </div>
+
+      <div class="toggle-row">
+        <span>Animate Photons</span>
+        <label class="switch">
+          <input type="checkbox" id="togglePhoton" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span>Show Virtual Tangent Lines</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleTangent" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span>Show Impact Parameters</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleImpact" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <span>Show Background Stars</span>
+        <label class="switch">
+          <input type="checkbox" id="toggleStars" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: #facc15;"></div>
+          <span>Actual deflected light rays</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="border: 1px dashed #ef4444; background: transparent;"></div>
+          <span>Apparent straight-line paths (virtual images)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #00f0ff;"></div>
+          <span>Cluster impact parameter & Earth impact</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Canvas Fixed Total Height Scale (13.5 Billion Light-Years)
+    const CANVAS_TOTAL_GLY = 13.5;
+
+    // Controls
+    const toggleCluster = document.getElementById('toggleCluster');
+    const sliderDistG = document.getElementById('sliderDistG');
+    const sliderOffsetX = document.getElementById('sliderOffsetX');
+    const sliderDistC = document.getElementById('sliderDistC');
+    const sliderMass = document.getElementById('sliderMass');
+    const sliderNumRays = document.getElementById('sliderNumRays');
+    const sliderFanSpread = document.getElementById('sliderFanSpread');
+    const sliderTheta = document.getElementById('sliderTheta');
+    const toggleManualScale = document.getElementById('toggleManualScale');
+    const sliderExaggeration = document.getElementById('sliderExaggeration');
+
+    const grpDistC = document.getElementById('grpDistC');
+    const grpMass = document.getElementById('grpMass');
+    const grpFanSpread = document.getElementById('grpFanSpread');
+    const grpTheta = document.getElementById('grpTheta');
+    const grpExaggeration = document.getElementById('grpExaggeration');
+
+    const valDistG = document.getElementById('valDistG');
+    const valOffsetX = document.getElementById('valOffsetX');
+    const valDistC = document.getElementById('valDistC');
+    const valMass = document.getElementById('valMass');
+    const valNumRays = document.getElementById('valNumRays');
+    const valFanSpread = document.getElementById('valFanSpread');
+    const valTheta = document.getElementById('valTheta');
+    const valExaggeration = document.getElementById('valExaggeration');
+
+    const togglePhoton = document.getElementById('togglePhoton');
+    const toggleTangent = document.getElementById('toggleTangent');
+    const toggleImpact = document.getElementById('toggleImpact');
+    const toggleStars = document.getElementById('toggleStars');
+
+    // Calculation Box Elements
+    const boxDistG = document.getElementById('boxDistG');
+    const boxOffsetX = document.getElementById('boxOffsetX');
+    const boxDistC = document.getElementById('boxDistC');
+    const boxDistGC = document.getElementById('boxDistGC');
+    const boxMass = document.getElementById('boxMass');
+    const boxMode = document.getElementById('boxMode');
+    const boxImpactRange = document.getElementById('boxImpactRange');
+    const boxEarthImpactRange = document.getElementById('boxEarthImpactRange');
+    const boxAlphaRange = document.getElementById('boxAlphaRange');
+
+    let width = 0;
+    let height = 0;
+    let photonAnimProgress = 0;
+
+    // Background Stars
+    const stars = [];
+    for (let i = 0; i < 220; i++) {
+      stars.push({
+        x: Math.random(),
+        y: Math.random(),
+        size: Math.random() * 1.5 + 0.3,
+        alpha: Math.random() * 0.7 + 0.3
+      });
+    }
+
+    // Cluster Member Galaxies layout offsets (up to 30 member galaxies)
+    const clusterGalaxyList = [
+      { x: 0, y: 0, r: 3.5 },
+      { x: -6, y: -5, r: 2.2 },
+      { x: 8, y: 4, r: 2.5 },
+      { x: -12, y: 8, r: 2.0 },
+      { x: 10, y: -10, r: 2.1 },
+      { x: 5, y: -14, r: 1.8 },
+      { x: -15, y: -6, r: 2.3 },
+      { x: 18, y: -2, r: 1.9 },
+      { x: -8, y: 16, r: 2.2 },
+      { x: 14, y: 12, r: 1.7 },
+      { x: 2, y: 18, r: 2.0 },
+      { x: -20, y: 4, r: 1.8 },
+      { x: -4, y: -20, r: 1.9 },
+      { x: 22, y: -12, r: 1.6 },
+      { x: 12, y: -22, r: 1.8 },
+      { x: -22, y: -15, r: 1.7 },
+      { x: -16, y: 22, r: 1.9 },
+      { x: 25, y: 8, r: 1.5 },
+      { x: 6, y: 26, r: 1.7 },
+      { x: -28, y: -4, r: 1.6 },
+      { x: 18, y: 22, r: 1.5 },
+      { x: -10, y: -28, r: 1.8 },
+      { x: 28, y: -20, r: 1.4 },
+      { x: -25, y: 18, r: 1.6 },
+      { x: 0, y: -32, r: 1.5 },
+      { x: 32, y: 2, r: 1.4 },
+      { x: -32, y: -18, r: 1.5 },
+      { x: 20, y: -30, r: 1.4 },
+      { x: -20, y: -32, r: 1.3 },
+      { x: 15, y: 32, r: 1.4 }
+    ];
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      width = rect.width;
+      height = rect.height;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Distance constraints: d_G >= d_C + 1.0 Gly
+    sliderDistG.addEventListener('input', () => {
+      let dG = parseFloat(sliderDistG.value);
+      let dC = parseFloat(sliderDistC.value);
+      if (dG < dC + 1.0) {
+        dC = Math.max(1.0, dG - 1.0);
+        sliderDistC.value = dC.toFixed(1);
+      }
+      updateControlStates();
+    });
+
+    sliderDistC.addEventListener('input', () => {
+      let dG = parseFloat(sliderDistG.value);
+      let dC = parseFloat(sliderDistC.value);
+      if (dC > dG - 1.0) {
+        dG = Math.min(13.0, dC + 1.0);
+        sliderDistG.value = dG.toFixed(1);
+      }
+      updateControlStates();
+    });
+
+    toggleCluster.addEventListener('change', updateControlStates);
+    sliderMass.addEventListener('input', updateControlStates);
+    sliderNumRays.addEventListener('input', updateControlStates);
+    toggleManualScale.addEventListener('change', updateControlStates);
+    sliderExaggeration.addEventListener('input', updateControlStates);
+
+    function updateControlStates() {
+      const numRays = parseInt(sliderNumRays.value);
+      const clusterEnabled = toggleCluster.checked;
+      const manualScaleEnabled = toggleManualScale.checked;
+
+      if (!clusterEnabled) {
+        sliderMass.disabled = true;
+        grpMass.classList.add('disabled-control');
+        sliderDistC.disabled = true;
+        grpDistC.classList.add('disabled-control');
+      } else {
+        sliderMass.disabled = false;
+        grpMass.classList.remove('disabled-control');
+        sliderDistC.disabled = false;
+        grpDistC.classList.remove('disabled-control');
+      }
+
+      if (numRays > 1) {
+        sliderTheta.disabled = true;
+        grpTheta.classList.add('disabled-control');
+
+        sliderFanSpread.disabled = false;
+        grpFanSpread.classList.remove('disabled-control');
+      } else {
+        sliderTheta.disabled = false;
+        grpTheta.classList.remove('disabled-control');
+
+        sliderFanSpread.disabled = true;
+        grpFanSpread.classList.add('disabled-control');
+      }
+
+      if (!manualScaleEnabled) {
+        sliderExaggeration.disabled = true;
+        grpExaggeration.classList.add('disabled-control');
+      } else {
+        sliderExaggeration.disabled = false;
+        grpExaggeration.classList.remove('disabled-control');
+      }
+    }
+
+    updateControlStates();
+
+    function calculateRays() {
+      const clusterEnabled = toggleCluster.checked;
+      const d_G_Gly = parseFloat(sliderDistG.value);
+      const x_G_kly = parseFloat(sliderOffsetX.value);
+      const d_C_Gly = parseFloat(sliderDistC.value);
+      const d_GC_Gly = d_G_Gly - d_C_Gly;
+      const M_tril = clusterEnabled ? parseFloat(sliderMass.value) : 0;
+      const numRays = parseInt(sliderNumRays.value);
+      const fanSpreadArcsec = parseFloat(sliderFanSpread.value);
+      const thetaInitArcsec = parseFloat(sliderTheta.value);
+
+      const ARCSEC_TO_RAD = Math.PI / (180.0 * 3600.0);
+      const d_GC_ly = d_GC_Gly * 1e9;
+      const d_C_ly = d_C_Gly * 1e9;
+      const x_G_ly = x_G_kly * 1e3;
+
+      const scale_4GM_c2_ly = 0.6243363 * M_tril;
+
+      const rays = [];
+
+      for (let i = 0; i < numRays; i++) {
+        let initialAngle = 0;
+
+        if (numRays === 1) {
+          initialAngle = thetaInitArcsec;
+        } else {
+          const frac = (i / (numRays - 1)) - 0.5;
+          initialAngle = frac * fanSpreadArcsec;
+        }
+
+        const theta_init_rad = initialAngle * ARCSEC_TO_RAD;
+        
+        const b_C_ly = x_G_ly + d_GC_ly * Math.tan(theta_init_rad);
+        const abs_b_C_ly = Math.abs(b_C_ly);
+
+        let alpha_arcsec = 0;
+        let alpha_rad = 0;
+        if (M_tril > 0 && abs_b_C_ly > 1e-3) {
+          alpha_rad = scale_4GM_c2_ly / abs_b_C_ly;
+          alpha_arcsec = alpha_rad / ARCSEC_TO_RAD;
+        }
+
+        let theta_after_rad = theta_init_rad;
+        if (M_tril > 0) {
+          if (b_C_ly > 0) {
+            theta_after_rad = theta_init_rad - alpha_rad;
+          } else if (b_C_ly < 0) {
+            theta_after_rad = theta_init_rad + alpha_rad;
+          }
+        }
+        const theta_after_arcsec = theta_after_rad / ARCSEC_TO_RAD;
+
+        const b_E_ly = b_C_ly + d_C_ly * Math.tan(theta_after_rad);
+        const abs_b_E_ly = Math.abs(b_E_ly);
+
+        rays.push({
+          index: i,
+          theta_init_arcsec: initialAngle,
+          b_C_ly: b_C_ly,
+          abs_b_C_ly: abs_b_C_ly,
+          b_E_ly: b_E_ly,
+          abs_b_E_ly: abs_b_E_ly,
+          alpha_arcsec: alpha_arcsec,
+          theta_after_arcsec: theta_after_arcsec
+        });
+      }
+
+      return {
+        clusterEnabled,
+        d_G_Gly,
+        x_G_kly,
+        d_C_Gly,
+        d_GC_Gly,
+        M_tril,
+        numRays,
+        fanSpreadArcsec,
+        thetaInitArcsec,
+        rays
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      const sim = calculateRays();
+
+      // Post-lensing manual exaggeration scale (affects only Cluster -> Earth ray path)
+      const postLensingScale = toggleManualScale.checked ? parseFloat(sliderExaggeration.value) : 1.0;
+
+      // Label Updates
+      valDistG.textContent = `${sim.d_G_Gly.toFixed(1)} billion light-years`;
+      valOffsetX.textContent = `${sim.x_G_kly >= 0 ? '+' : ''}${sim.x_G_kly} thousand light-years`;
+      valDistC.textContent = !sim.clusterEnabled ? "N/A" : `${sim.d_C_Gly.toFixed(1)} billion light-years`;
+      valMass.textContent = !sim.clusterEnabled ? "Disabled" : `${sim.M_tril} trillion solar masses`;
+      valNumRays.textContent = `${sim.numRays}`;
+      valFanSpread.textContent = `${sim.fanSpreadArcsec} arc-seconds`;
+      valTheta.textContent = `${sim.thetaInitArcsec >= 0 ? '+' : ''}${sim.thetaInitArcsec.toFixed(1)} arc-seconds`;
+      valExaggeration.textContent = `${postLensingScale.toFixed(2)}x`;
+
+      // Update Numerical Box
+      boxDistG.textContent = `${sim.d_G_Gly.toFixed(1)} billion light-years`;
+      boxOffsetX.textContent = `${sim.x_G_kly >= 0 ? '+' : ''}${sim.x_G_kly} thousand light-years`;
+      boxDistC.textContent = !sim.clusterEnabled ? "N/A" : `${sim.d_C_Gly.toFixed(1)} billion light-years`;
+      boxDistGC.textContent = !sim.clusterEnabled ? "N/A" : `${sim.d_GC_Gly.toFixed(1)} billion light-years`;
+      boxMass.textContent = !sim.clusterEnabled ? "None" : `${sim.M_tril} trillion solar masses`;
+
+      if (sim.numRays === 1) {
+        const r = sim.rays[0];
+        boxMode.textContent = `Single Ray`;
+        boxImpactRange.textContent = sim.clusterEnabled ? `${(r.abs_b_C_ly / 1000.0).toFixed(2)} thousand light-years` : "N/A";
+        boxEarthImpactRange.textContent = `${(r.abs_b_E_ly / 1000.0).toFixed(2)} thousand light-years`;
+        boxAlphaRange.textContent = sim.clusterEnabled ? `${r.alpha_arcsec.toFixed(2)} arc-seconds` : "0.00 arc-seconds";
+      } else {
+        boxMode.textContent = `Fan (${sim.numRays} rays)`;
+        
+        const bCValues = sim.rays.map(r => r.abs_b_C_ly / 1000.0);
+        const bEValues = sim.rays.map(r => r.abs_b_E_ly / 1000.0);
+        const alphaValues = sim.rays.map(r => r.alpha_arcsec).filter(a => isFinite(a));
+        
+        const minBC = Math.min(...bCValues);
+        const maxBC = Math.max(...bCValues);
+        const minBE = Math.min(...bEValues);
+        const maxBE = Math.max(...bEValues);
+        const maxAlpha = Math.max(...alphaValues);
+
+        boxImpactRange.textContent = sim.clusterEnabled ? `${minBC.toFixed(1)} to ${maxBC.toFixed(1)} thousand light-years` : "N/A";
+        boxEarthImpactRange.textContent = `${minBE.toFixed(1)} to ${maxBE.toFixed(1)} thousand light-years`;
+        boxAlphaRange.textContent = sim.clusterEnabled ? `${maxAlpha.toFixed(2)} arc-seconds max` : "0.00 arc-seconds";
+      }
+
+      // Visual Layout Dimensions (Vertical Field)
+      const topMargin = 45;
+      const bottomMargin = 55;
+      const centerX = width / 2;
+
+      const earthY = height - bottomMargin;
+      const drawableHeight = height - topMargin - bottomMargin;
+      const pxPerGly = drawableHeight / CANVAS_TOTAL_GLY;
+
+      const galaxyY = earthY - (sim.d_G_Gly * pxPerGly);
+      const clusterY = earthY - (sim.d_C_Gly * pxPerGly);
+
+      // Base exaggerated scale for pre-lensing path (Galaxy -> Cluster)
+      const pxPerKlyBase = 100.0 / 500.0;
+      const galaxyX = centerX + (sim.x_G_kly * pxPerKlyBase);
+
+      const ptA = { x: galaxyX, y: galaxyY };
+
+      // Starfield Background
+      if (toggleStars.checked) {
+        ctx.fillStyle = "#ffffff";
+        stars.forEach(s => {
+          ctx.globalAlpha = s.alpha;
+          ctx.fillRect(s.x * width, s.y * height, s.size, s.size);
+        });
+        ctx.globalAlpha = 1.0;
+      }
+
+      // Central Optical Axis
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(centerX, earthY + 20);
+      ctx.lineTo(centerX, earthY - CANVAS_TOTAL_GLY * pxPerGly - 15);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Cluster Plane Line
+      if (sim.clusterEnabled && sim.M_tril > 0) {
+        ctx.strokeStyle = "rgba(0, 240, 255, 0.25)";
+        ctx.beginPath();
+        ctx.moveTo(20, clusterY);
+        ctx.lineTo(width - 20, clusterY);
+        ctx.stroke();
+      }
+
+      // Earth Plane Line
+      ctx.strokeStyle = "rgba(0, 240, 255, 0.15)";
+      ctx.beginPath();
+      ctx.moveTo(20, earthY);
+      ctx.lineTo(width - 20, earthY);
+      ctx.stroke();
+
+      // Render Primary Light Rays & Virtual Tangents
+      sim.rays.forEach((ray, idx) => {
+        // Path before Cluster uses the standard exaggerated horizontal scale
+        const clusterX = centerX + (ray.b_C_ly / 1000.0) * pxPerKlyBase;
+        
+        // Path after Cluster applies the manual exaggeration scale factor to the displacement
+        const delta_b_kly = (ray.b_E_ly - ray.b_C_ly) / 1000.0;
+        const earthX = clusterX + (delta_b_kly * pxPerKlyBase * postLensingScale);
+
+        const ptB = { x: clusterX, y: clusterY };
+        const ptC = { x: earthX, y: earthY };
+
+        // Virtual Tangent Line
+        if (toggleTangent.checked && Math.abs(ray.alpha_arcsec) > 0.1 && sim.M_tril > 0) {
+          ctx.strokeStyle = "rgba(239, 68, 68, 0.5)";
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([3, 3]);
+
+          const slopeX = (ptC.x - ptB.x) / (ptC.y - ptB.y);
+          const virtualX_at_galaxy = ptB.x + slopeX * (galaxyY - clusterY);
+
+          ctx.beginPath();
+          ctx.moveTo(ptC.x, ptC.y);
+          ctx.lineTo(virtualX_at_galaxy, galaxyY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "rgba(239, 68, 68, 0.8)";
+          ctx.beginPath();
+          ctx.arc(virtualX_at_galaxy, galaxyY, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Actual Lensed Light Path
+        ctx.strokeStyle = "#facc15";
+        ctx.lineWidth = sim.numRays === 1 ? 2.5 : 1.8;
+        ctx.shadowColor = "#facc15";
+        ctx.shadowBlur = sim.numRays === 1 ? 6 : 3;
+
+        ctx.beginPath();
+        ctx.moveTo(ptA.x, ptA.y);
+        if (sim.M_tril > 0) {
+          ctx.lineTo(ptB.x, ptB.y);
+        }
+        ctx.lineTo(ptC.x, ptC.y);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Visual Indicators for Impact Parameters
+        if (toggleImpact.checked && sim.numRays === 1) {
+          // Cluster Impact Parameter
+          if (sim.clusterEnabled && sim.M_tril > 0 && Math.abs(ptB.x - centerX) > 3) {
+            ctx.strokeStyle = "#00f0ff";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, clusterY);
+            ctx.lineTo(ptB.x, clusterY);
+            ctx.stroke();
+
+            ctx.fillStyle = "#00f0ff";
+            ctx.beginPath();
+            ctx.arc(ptB.x, clusterY, 2.5, 0, Math.PI * 2);
+            ctx.arc(centerX, clusterY, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.font = "10px monospace";
+            const clusterLabel = `${(ray.abs_b_C_ly / 1000).toFixed(1)} thousand light-years`;
+            const textWidth = ctx.measureText(clusterLabel).width;
+            const charOffset = 18;
+            
+            let labelX = 0;
+            let align = "center";
+
+            if (ray.theta_init_arcsec < 0) {
+              labelX = ptB.x + charOffset;
+              align = "left";
+              if (labelX + textWidth > width - 10) {
+                labelX = width - 10 - textWidth;
+              }
+              if (labelX < 10) {
+                labelX = 10;
+              }
+            } else {
+              labelX = ptB.x - charOffset;
+              align = "right";
+              if (labelX - textWidth < 10) {
+                labelX = 10 + textWidth;
+              }
+              if (labelX > width - 10) {
+                labelX = width - 10;
+              }
+            }
+
+            ctx.textAlign = align;
+            ctx.fillText(clusterLabel, labelX, clusterY - 6);
+          }
+
+          // Earth Impact Parameter
+          if (Math.abs(ptC.x - centerX) > 3) {
+            ctx.strokeStyle = "#00f0ff";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, earthY);
+            ctx.lineTo(ptC.x, earthY);
+            ctx.stroke();
+
+            ctx.fillStyle = "#00f0ff";
+            ctx.beginPath();
+            ctx.arc(ptC.x, earthY, 2.5, 0, Math.PI * 2);
+            ctx.arc(centerX, earthY, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.font = "10px monospace";
+            const earthLabel = `${(ray.abs_b_E_ly / 1000).toFixed(1)} thousand light-years`;
+            const earthTextWidth = ctx.measureText(earthLabel).width;
+            let earthTextX = (centerX + ptC.x) / 2;
+
+            if (earthTextX - earthTextWidth / 2 < 10) {
+              earthTextX = 10 + earthTextWidth / 2;
+            } else if (earthTextX + earthTextWidth / 2 > width - 10) {
+              earthTextX = width - 10 - earthTextWidth / 2;
+            }
+
+            ctx.textAlign = "center";
+            ctx.fillText(earthLabel, earthTextX, earthY + 16);
+          }
+        }
+
+        // Animated Photons
+        if (togglePhoton.checked) {
+          const rayOffset = (idx / sim.numRays);
+          const progress = (photonAnimProgress + rayOffset) % 1.0;
+          let px = 0, py = 0;
+
+          if (sim.M_tril === 0) {
+            px = ptA.x + progress * (ptC.x - ptA.x);
+            py = ptA.y + progress * (ptC.y - ptA.y);
+          } else {
+            const d1 = Math.hypot(ptB.x - ptA.x, ptB.y - ptA.y);
+            const d2 = Math.hypot(ptC.x - ptB.x, ptC.y - ptB.y);
+            const dTotal = d1 + d2;
+            const f1 = dTotal > 0 ? d1 / dTotal : 0.5;
+
+            if (progress <= f1) {
+              const t = f1 > 0 ? progress / f1 : 0;
+              px = ptA.x + t * (ptB.x - ptA.x);
+              py = ptA.y + t * (ptB.y - ptA.y);
+            } else {
+              const t = (1 - f1) > 0 ? (progress - f1) / (1 - f1) : 0;
+              px = ptB.x + t * (ptC.x - ptB.x);
+              py = ptB.y + t * (ptC.y - ptB.y);
+            }
+          }
+
+          ctx.fillStyle = "#ffffff";
+          ctx.shadowColor = "#00f0ff";
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+
+      if (togglePhoton.checked) {
+        photonAnimProgress = (photonAnimProgress + 0.006) % 1.0;
+      }
+
+      // Draw Celestial Objects
+
+      // 1. Distant Galaxy (Top)
+      ctx.save();
+      ctx.translate(ptA.x, ptA.y);
+      const galGlow = ctx.createRadialGradient(0, 0, 2, 0, 0, 18);
+      galGlow.addColorStop(0, "rgba(255, 200, 100, 0.9)");
+      galGlow.addColorStop(0.5, "rgba(238, 100, 30, 0.3)");
+      galGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = galGlow;
+      ctx.beginPath();
+      ctx.arc(0, 0, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#ffd59e";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 12, 4, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = "#e1e7ec";
+      ctx.font = "11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Distant Galaxy", ptA.x, ptA.y - 15);
+
+      // 2. Intermediate Cluster
+      if (sim.clusterEnabled && sim.M_tril > 0) {
+        ctx.save();
+        ctx.translate(centerX, clusterY);
+        
+        const massRatio = Math.max(0, Math.min(1, (sim.M_tril - 100) / 900));
+        const haloRadius = 16 + massRatio * 46;
+        
+        const clusterGlow = ctx.createRadialGradient(0, 0, 2, 0, 0, haloRadius);
+        const alphaCenter = 0.5 + massRatio * 0.45;
+        const alphaMid = 0.25 + massRatio * 0.55;
+        
+        clusterGlow.addColorStop(0, `rgba(216, 180, 254, ${alphaCenter})`);
+        clusterGlow.addColorStop(0.35, `rgba(168, 85, 247, ${alphaMid})`);
+        clusterGlow.addColorStop(0.7, `rgba(126, 34, 206, ${alphaMid * 0.5})`);
+        clusterGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        
+        ctx.fillStyle = clusterGlow;
+        ctx.beginPath();
+        ctx.arc(0, 0, haloRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        const numGalaxies = Math.floor(3 + massRatio * 27);
+        const spreadScale = 0.6 + massRatio * 0.6;
+        
+        for (let i = 0; i < numGalaxies; i++) {
+          const g = clusterGalaxyList[i];
+          const gx = g.x * spreadScale;
+          const gy = g.y * spreadScale;
+          
+          ctx.fillStyle = i === 0 ? "#ffffff" : `rgba(255, 245, 255, ${0.75 + (1 - i / 30) * 0.25})`;
+          ctx.beginPath();
+          ctx.arc(gx, gy, g.r, 0, Math.PI * 2);
+          ctx.fill();
+          
+          if (g.r >= 2.0) {
+            ctx.fillStyle = `rgba(192, 132, 252, ${0.3 + massRatio * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(gx, gy, g.r * 1.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        ctx.restore();
+
+        ctx.fillStyle = "#e1e7ec";
+        ctx.font = "11px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Intermediate Cluster", centerX, clusterY + haloRadius + 14);
+      }
+
+      // 3. Earth / Observer (Bottom)
+      ctx.save();
+      ctx.translate(centerX, earthY);
+      const earthGrad = ctx.createRadialGradient(-2, -2, 1, 0, 0, 8);
+      earthGrad.addColorStop(0, "#60a5fa");
+      earthGrad.addColorStop(0.8, "#1d4ed8");
+      earthGrad.addColorStop(1, "#1e3a8a");
+      ctx.fillStyle = earthGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = "#e1e7ec";
+      ctx.font = "11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Earth", centerX, earthY + 26);
+
+      // Bottom Note inside Graphic Window
+      ctx.fillStyle = "rgba(140, 155, 174, 0.75)";
+      ctx.font = "italic 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("angles are exaggerated", centerX, height - 12);
+    }
+
+    function animate() {
+      draw();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
