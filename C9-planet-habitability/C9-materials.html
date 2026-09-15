@@ -1,6 +1,6 @@
 <html> 
 <head>
-<title>Calculating Stellar Lifespans</title>
+<title>materials for Determining planet surface temperatures</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
@@ -17,14 +17,24 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 </head>
 <body>
 
-    <h1>Materials for Calculating Stellar Lifespans</h1>
+    <h1>Materials for Determining planet surface temperatures</h1>
     
-    <p>This page links to materials developed or refined as part of developing the review video + text for Calculating Stellar Lifespans. </p> 
+    <p>This page links to materials developed or refined as part of developing the review video + text for determining planet surface temperatures. </p> 
 
 <ul>
-    <li>Stellar lifespan calculator <a href=https://foothillastrosims.github.io/stellar-lifespan/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/stellar-lifespan target=_blank>source</a></li>
-    <li>Star graphics were edited from NASA resource "The Lives of Stars" (<a href=https://science.nasa.gov/resource/the-lives-of-stars/ target=_blank>original</a>)</li>
-    
+    <li>Planetary temperature plots</li>
+    <ul>
+        <li>Python scripts for producting the following plots (<a href="planet_temperature_plots.ipynb" target="_blank">code</a>)</li>
+        <li>baseline temperature <img src="astrobio-solar-system-surface-temperatures-matchSim_1.jpg" alt="Baseline temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun"></li>        
+        <li>expected temperature <img src="astrobio-solar-system-surface-temperatures-matchSim_2.jpg" alt="Expected temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun and how much light they reflect"></li>        
+        <li>surface temperature <img src="astrobio-solar-system-surface-temperatures-matchSim.jpg" alt="Mean surface temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun, how much light they reflect, and the strength of their greenhouse effect"></li>        
+    </ul>
+
+
+<li>Simulation (developed using Google Gemini)</li>
+    <ol>
+        <li><a href="planetary_temperatures.html" target="_blank">Planet temperature simulator</a> focusing on forward modeling of surface tempearture based on distance, albedo, and greenhouse effect (<a href="Planetary_Temperature_Grapher_with_Slider.pdf" target="_blank")>prompts</a>).  Currently just used to produce animations, requires refinement before it can be student-facing</li>
+    </ol>       
 </ul>
     
   <!-- Footer -->

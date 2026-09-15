@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geoff Mathews' AstroSims > Planetary surface temperature calculator</title>
+    <!-- Include Chart.js and its official plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Top Header Region */
+        .header-bar {
+            width: 100%;
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .header-buttons button {
+            background: #334155;
+            color: #fff;
+            border: 1px solid #475569;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .header-buttons button:hover {
+            background: #475569;
+        }
+        
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 1000px;
+        }
+
+        /* Sidebar Controls */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: opacity 0.2s;
+        }
+        .control-group.disabled {
+            opacity: 0.4;
+        }
+        .control-group label {
+            font-weight: bold;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .control-group label input[type=checkbox] {
+            margin: 0;
+            cursor: pointer;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type=range] {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+        input[type=range]:disabled, input[type=number]:disabled {
+            cursor: not-allowed;
+        }
+        input[type=number] {
+            width: 70px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Top Displays */
+        .top-displays {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .display-box {
+            text-align: center;
+        }
+        .display-box .title {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .display-box .value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .val-baseline { color: #000; }
+        .val-effective { color: #0000ff; }
+        .val-surface { color: #ff0000; }
+
+        /* Chart Container & Toolbars */
+        .chart-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .canvas-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .canvas-toolbar select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .toggle-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-label input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .bottom-controls {
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        
+        .range-inputs {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        .range-inputs input {
+            width: 60px;
+        }
+        
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            background: #f8f9fa;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #e9ecef;
+        }
+        .btn-primary {
+            background: #0d6efd;
+            color: white;
+            border-color: #0b5ed7;
+        }
+        .btn-primary:hover { background: #0b5ed7; }
+        
+        /* Audio Controls */
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            margin-top: auto;
+        }
+
+        /* Popup overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: left;
+        }
+        .modal-content p { margin: 10px 0; line-height: 1.5; }
+        .close-modal { margin-top: 15px; display: block; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER BAR -->
+    <div class="header-bar">
+        <div class="header-title">Geoff Mathews' AstroSims &gt; Planetary surface temperature calculator</div>
+        <div class="header-buttons">
+            <button id="resetAppBtn">Reset</button>
+            <button id="aboutBtn">About</button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-container">
+        <!-- LEFT SIDEBAR -->
+        <div class="sidebar">
+            <h3 style="margin-top: 0;">Parameters</h3>
+            
+            <div class="control-group" id="groupLum">
+                <label>Stellar Luminosity (L☉)</label>
+                <div class="input-row">
+                    <input type="range" id="lumSlider" min="0.1" max="10" step="0.05" value="1.0" data-source="lum">
+                    <input type="number" id="lumInput" min="0.1" max="10" step="0.05" value="1.00" data-source="lum">
+                </div>
+            </div>
+
+            <div class="control-group" id="groupDist">
+                <label>Planet Distance (AU)</label>
+                <div class="input-row">
+                    <input type="range" id="distSlider" min="0.2" max="5.0" step="0.01" value="1.0" data-source="dist">
+                    <input type="number" id="distInput" min="0.2" max="5.0" step="0.01" value="1.00" data-source="dist">
+                </div>
+            </div>
+
+            <div class="control-group" id="groupAlbedo">
+                <label><input type="checkbox" id="albedoCheck"> Planet Albedo (%)</label>
+                <div class="input-row">
+                    <input type="range" id="albedoSlider" min="0" max="100" step="1" value="30" data-source="albedo">
+                    <input type="number" id="albedoInput" min="0" max="100" step="1" value="30" data-source="albedo">
+                </div>
+            </div>
+
+            <div class="control-group" id="groupGreenhouse">
+                <label><input type="checkbox" id="greenhouseCheck"> Greenhouse Trapped (%)</label>
+                <div class="input-row">
+                    <input type="range" id="greenhouseSlider" min="0" max="99" step="1" value="33" data-source="greenhouse">
+                    <input type="number" id="greenhouseInput" min="0" max="99" step="1" value="33" data-source="greenhouse">
+                </div>
+            </div>
+
+            <button id="infoBtn">Information</button>
+
+            <div class="audio-controls">
+                <button id="muteBtn" style="flex-grow:1;">Unmute Sound</button>
+                <button id="soundInfoBtn">Sound Info</button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-content">
+            
+            <!-- Top Text Displays -->
+            <div class="top-displays">
+                <div class="display-box">
+                    <div class="title">Baseline Temp (Distance)</div>
+                    <div class="value val-baseline" id="valBaseline">278.3 K</div>
+                </div>
+                <div class="display-box">
+                    <div class="title">Temp. due to reflection</div>
+                    <div class="value val-effective" id="valEffective">254.6 K</div>
+                </div>
+                <div class="display-box">
+                    <div class="title">and including greenhouse</div>
+                    <div class="value val-surface" id="valSurface">282.0 K</div>
+                </div>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="chart-container">
+                <canvas id="tempChart"></canvas>
+                
+                <!-- Lower-left controls attached directly under canvas -->
+                <div class="canvas-toolbar">
+                    <button id="resetGraphBtn">Reset graph</button>
+                    <label style="font-size: 0.85em; font-weight: bold;">
+                        Temperature Units:
+                        <select id="tempUnitSelect">
+                            <option value="K" selected>Kelvin (K)</option>
+                            <option value="C">Celsius (°C)</option>
+                            <option value="F">Fahrenheit (°F)</option>
+                        </select>
+                    </label>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="showLabelsCheck" checked>
+                        Show Marker Labels
+                    </label>
+                </div>
+
+                <p style="text-align: center; font-size: 0.85em; color: #666; margin: 10px 0 0 0;">
+                    <em>Click and drag to zoom. Right-click the graph to zoom back out.</em>
+                </p>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="bottom-controls">
+                <div class="range-inputs">
+                    <strong>X-Axis (AU):</strong>
+                    Min <input type="number" id="xMin" value="0.2" step="0.1">
+                    Max <input type="number" id="xMax" value="5.0" step="0.1">
+                </div>
+                <div class="range-inputs">
+                    <strong>Y-Axis (<span id="yAxisUnitLabel">K</span>):</strong>
+                    Min <input type="number" id="yMin" value="100" step="10">
+                    Max <input type="number" id="yMax" value="500" step="10">
+                </div>
+                <button onclick="applyManualLimits()">Apply Limits</button>
+                <button class="btn-primary" onclick="downloadChart()">Download PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Information Modal -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Model Information</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <button class="close-modal" id="closeInfoModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Sound Info Modal -->
+    <div class="modal" id="soundInfoModal">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">Sonification Info</h3>
+            <p><strong>Baseline Temperature (Piano/Triangle Wave):</strong> Base pitch corresponding to the black dot.</p>
+            <p><strong>Temp. due to reflection (Flute/Sine Wave):</strong> Pitch drops as albedo reflects energy away (blue diamond).</p>
+            <p><strong>and including greenhouse (Violin/Sawtooth Wave):</strong> Pitch rises as greenhouse effect traps heat (red square).</p>
+            <p><em>Pitch Mapping:</em> 285 K is Middle C. It scales linearly up 2 octaves to 1000 K, and down 2 octaves to 10 K.</p>
+            <p><em>Volume:</em> The parameter you are currently sliding dictates which instrument is loudest. Changing Luminosity balances all three sound profiles equally.</p>
+            <button class="close-modal" id="closeSoundModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Header About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">About Planetary Surface Temperature Calculator</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+            <p>Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+            <button class="close-modal" id="closeAboutModal">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // ---------------------------------------------------------------------------------
+        // MATH & UNIT CONVERSION HELPERS
+        // ---------------------------------------------------------------------------------
+        const BASE_TEMP_1_AU = 278.3; 
+
+        function convertFromK(tempK, unit) {
+            if (unit === 'C') return tempK - 273.15;
+            if (unit === 'F') return (tempK - 273.15) * 1.8 + 32;
+            return tempK;
+        }
+
+        function getUnitSymbol(unit) {
+            if (unit === 'C') return '°C';
+            if (unit === 'F') return '°F';
+            return 'K';
+        }
+
+        function formatTemp(tempK, unit) {
+            const val = convertFromK(tempK, unit);
+            return `${val.toFixed(1)} ${getUnitSymbol(unit)}`;
+        }
+
+        function generateLineData(luminosity, unit) {
+            const data = [];
+            for (let d = 0.05; d <= 20.0; d += 0.02) {
+                const tempK = BASE_TEMP_1_AU * Math.pow(luminosity, 0.25) / Math.pow(d, 0.5);
+                const val = convertFromK(tempK, unit);
+                data.push({ x: parseFloat(d.toFixed(3)), y: parseFloat(val.toFixed(2)) });
+            }
+            return data;
+        }
+
+        // ---------------------------------------------------------------------------------
+        // CUSTOM CHART PLUGIN: DATA MARKER LABEL BOXES
+        // ---------------------------------------------------------------------------------
+        const markerLabelsPlugin = {
+            id: 'markerLabelsPlugin',
+            afterDatasetsDraw(chart) {
+                const showLabels = document.getElementById('showLabelsCheck').checked;
+                if (!showLabels) return;
+                if (!chart.markerLabels || !chart.markerLabels.length) return;
+
+                const ctx = chart.ctx;
+                const xScale = chart.scales.x;
+                const yScale = chart.scales.y;
+                if (!xScale || !yScale) return;
+
+                ctx.save();
+                ctx.font = '600 11px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+
+                const placedBoxes = [];
+
+                chart.markerLabels.forEach(item => {
+                    const xPx = xScale.getPixelForValue(item.x);
+                    const yPx = yScale.getPixelForValue(item.y);
+
+                    if (isNaN(xPx) || isNaN(yPx)) return;
+
+                    const textMetrics = ctx.measureText(item.text);
+                    const textWidth = textMetrics.width;
+                    const paddingX = 7;
+                    const paddingY = 4;
+                    const boxWidth = textWidth + paddingX * 2;
+                    const boxHeight = 14 + paddingY * 2;
+                    const offset = 10;
+
+                    // Evaluate boundaries: off top or off right
+                    const isOffTop = (yPx - offset - boxHeight < chart.chartArea.top);
+                    const isOffRight = (xPx + offset + boxWidth > chart.chartArea.right);
+
+                    let boxX, boxY;
+                    let textAlign = 'left';
+
+                    if (isOffRight) {
+                        boxX = xPx - offset - boxWidth;
+                        textAlign = 'right';
+                    } else {
+                        boxX = xPx + offset;
+                        textAlign = 'left';
+                    }
+
+                    if (isOffTop) {
+                        boxY = yPx + offset;
+                    } else {
+                        boxY = yPx - offset - boxHeight;
+                    }
+
+                    // Handle stacking if multiple boxes overlap at the exact same location
+                    placedBoxes.forEach(prev => {
+                        const xOverlap = Math.abs(prev.boxX - boxX) < 40;
+                        const yOverlap = Math.abs(prev.boxY - boxY) < boxHeight;
+                        if (xOverlap && yOverlap) {
+                            if (isOffTop) {
+                                boxY = prev.boxY + boxHeight + 4;
+                            } else {
+                                boxY = prev.boxY - boxHeight - 4;
+                            }
+                        }
+                    });
+
+                    placedBoxes.push({ boxX, boxY, boxWidth, boxHeight });
+
+                    // Draw box background
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+                    ctx.strokeStyle = item.color || '#333';
+                    ctx.lineWidth = 1.5;
+
+                    ctx.beginPath();
+                    if (ctx.roundRect) {
+                        ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 4);
+                    } else {
+                        ctx.rect(boxX, boxY, boxWidth, boxHeight);
+                    }
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Draw text label
+                    ctx.fillStyle = '#1e293b';
+                    ctx.textAlign = textAlign;
+                    ctx.textBaseline = 'middle';
+
+                    const textX = (textAlign === 'right') ? (boxX + boxWidth - paddingX) : (boxX + paddingX);
+                    const textY = boxY + boxHeight / 2;
+
+                    ctx.fillText(item.text, textX, textY);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        // ---------------------------------------------------------------------------------
+        // CHART.JS INITIALIZATION
+        // ---------------------------------------------------------------------------------
+        const ctx = document.getElementById('tempChart').getContext('2d');
+        const tempChart = new Chart(ctx, {
+            type: 'line',
+            plugins: [markerLabelsPlugin],
+            data: {
+                datasets: [
+                    {
+                        label: 'Baseline Curve Line',
+                        data: generateLineData(1, 'K'),
+                        borderColor: 'black',
+                        borderWidth: 4,
+                        fill: false,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        tension: 0.4,
+                        order: 4
+                    },
+                    {
+                        label: 'Baseline temp',
+                        data: [{x: 1, y: 278.3, realY: 278.3}],
+                        type: 'scatter',
+                        backgroundColor: 'black',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        pointStyle: 'circle',
+                        clip: false,
+                        order: 3
+                    },
+                    {
+                        label: 'Temp. due to reflection',
+                        data: [{x: 1, y: 254.6, realY: 254.6}],
+                        type: 'scatter',
+                        backgroundColor: 'blue',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        pointStyle: 'rectRot', 
+                        clip: false,
+                        order: 2
+                    },
+                    {
+                        label: 'and including greenhouse',
+                        data: [{x: 1, y: 282.0, realY: 282.0}],
+                        type: 'scatter',
+                        backgroundColor: 'red',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        pointStyle: 'rect',
+                        clip: false,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                animation: { duration: 0 }, 
+                layout: {
+                    padding: { top: 12, bottom: 12 }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false,
+                    axis: 'x'
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: { display: true, text: 'Distance from Star (AU)', font: { weight: 'bold' } },
+                        min: 0.2, max: 5.0
+                    },
+                    y: {
+                        title: { display: true, text: 'Temperature (K)', font: { weight: 'bold' } },
+                        min: 100, max: 500,
+                        afterBuildTicks: function(scale) {
+                            const unitSelect = document.getElementById('tempUnitSelect');
+                            const unit = unitSelect ? unitSelect.value : 'K';
+                            
+                            let freezeVal = 273;
+                            let boilVal = 373;
+                            if (unit === 'C') { freezeVal = 0; boilVal = 100; }
+                            if (unit === 'F') { freezeVal = 32; boilVal = 212; }
+
+                            const yMin = scale.min;
+                            const yMax = scale.max;
+
+                            // Ensure tick-marks for freezing and boiling point exist if in range
+                            const ticks = scale.ticks;
+                            const hasF = ticks.some(t => Math.abs(t.value - freezeVal) < 1e-2);
+                            const hasB = ticks.some(t => Math.abs(t.value - boilVal) < 1e-2);
+
+                            if (!hasF && freezeVal >= yMin && freezeVal <= yMax) {
+                                ticks.push({ value: freezeVal });
+                            }
+                            if (!hasB && boilVal >= yMin && boilVal <= yMax) {
+                                ticks.push({ value: boilVal });
+                            }
+
+                            ticks.sort((a, b) => a.value - b.value);
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            filter: function(item, chart) {
+                                return item.text !== 'Baseline Curve Line';
+                            },
+                            sort: function(a, b) {
+                                const legendOrder = ['Baseline temp', 'Temp. due to reflection', 'and including greenhouse'];
+                                return legendOrder.indexOf(a.text) - legendOrder.indexOf(b.text);
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return `Distance: ${context[0].parsed.x.toFixed(2)} AU`;
+                            },
+                            label: function(context) {
+                                const unit = document.getElementById('tempUnitSelect').value;
+                                const unitSym = getUnitSymbol(unit);
+                                let val = context.parsed.y;
+                                if (context.raw && context.raw.realY !== undefined) {
+                                    val = context.raw.realY;
+                                }
+                                if (context.dataset.label === 'Baseline Curve Line') {
+                                    return `Baseline Temp Curve: ${val.toFixed(1)} ${unitSym}`;
+                                }
+                                return `${context.dataset.label}: ${val.toFixed(1)} ${unitSym}`;
+                            }
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            liquidWaterZone: {
+                                type: 'box',
+                                yMin: 273,
+                                yMax: 373,
+                                backgroundColor: 'rgba(150, 150, 150, 0.3)',
+                                borderWidth: 0,
+                                label: {
+                                    display: true,
+                                    content: 'liquid water',
+                                    position: 'center',
+                                    color: '#333',
+                                    font: { weight: 'bold' }
+                                }
+                            }
+                        }
+                    },
+                    zoom: {
+                        zoom: {
+                            drag: {
+                                enabled: true,
+                                backgroundColor: 'rgba(13, 110, 253, 0.2)'
+                            },
+                            mode: 'xy',
+                        }
+                    }
+                }
+            }
+        });
+
+        // Reset Graph via right click or button
+        function resetGraphZoom() {
+            tempChart.resetZoom();
+            syncLimitInputs();
+            updateSimulation();
+        }
+
+        document.getElementById('tempChart').addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            resetGraphZoom();
+        });
+
+        document.getElementById('resetGraphBtn').addEventListener('click', resetGraphZoom);
+
+        // Toggle Marker Labels Handler
+        document.getElementById('showLabelsCheck').addEventListener('change', () => {
+            tempChart.update();
+        });
+
+        // ---------------------------------------------------------------------------------
+        // DOM CONTROLS, CHECKBOX LOGIC & SIMULATION RUNNER
+        // ---------------------------------------------------------------------------------
+        const albedoCheck = document.getElementById('albedoCheck');
+        const greenhouseCheck = document.getElementById('greenhouseCheck');
+        const unitSelect = document.getElementById('tempUnitSelect');
+
+        const controls = [
+            { slider: document.getElementById('lumSlider'), input: document.getElementById('lumInput'), group: document.getElementById('groupLum') },
+            { slider: document.getElementById('distSlider'), input: document.getElementById('distInput'), group: document.getElementById('groupDist') },
+            { slider: document.getElementById('albedoSlider'), input: document.getElementById('albedoInput'), group: document.getElementById('groupAlbedo') },
+            { slider: document.getElementById('greenhouseSlider'), input: document.getElementById('greenhouseInput'), group: document.getElementById('groupGreenhouse') }
+        ];
+
+        const xMinInput = document.getElementById('xMin');
+        const xMaxInput = document.getElementById('xMax');
+        const yMinInput = document.getElementById('yMin');
+        const yMaxInput = document.getElementById('yMax');
+        const yAxisUnitLabel = document.getElementById('yAxisUnitLabel');
+
+        controls.forEach(ctrl => {
+            ctrl.slider.addEventListener('input', (e) => {
+                ctrl.input.value = ctrl.slider.value;
+                updateSimulation(e.target.dataset.source);
+            });
+            ctrl.input.addEventListener('input', (e) => {
+                let val = parseFloat(ctrl.input.value);
+                const min = parseFloat(ctrl.input.min);
+                const max = parseFloat(ctrl.input.max);
+                if (val < min) val = min;
+                if (val > max) val = max;
+                ctrl.slider.value = val;
+                updateSimulation(e.target.dataset.source);
+            });
+        });
+
+        function updateCheckboxUIStates() {
+            const albedoActive = albedoCheck.checked;
+
+            document.getElementById('albedoSlider').disabled = !albedoActive;
+            document.getElementById('albedoInput').disabled = !albedoActive;
+            if(!albedoActive) {
+                controls[2].group.classList.add('disabled');
+                greenhouseCheck.checked = false;
+                greenhouseCheck.disabled = true;
+            } else {
+                controls[2].group.classList.remove('disabled');
+                greenhouseCheck.disabled = false;
+            }
+
+            const greenhouseActive = greenhouseCheck.checked;
+            document.getElementById('greenhouseSlider').disabled = !greenhouseActive;
+            document.getElementById('greenhouseInput').disabled = !greenhouseActive;
+            if(!greenhouseActive) {
+                controls[3].group.classList.add('disabled');
+            } else {
+                controls[3].group.classList.remove('disabled');
+            }
+
+            updateSimulation();
+        }
+
+        albedoCheck.addEventListener('change', updateCheckboxUIStates);
+        greenhouseCheck.addEventListener('change', updateCheckboxUIStates);
+
+        // Temperature Unit Switcher Handler
+        unitSelect.addEventListener('change', () => {
+            const unit = unitSelect.value;
+            const unitSym = getUnitSymbol(unit);
+
+            // Update axis label
+            tempChart.options.scales.y.title.text = `Temperature (${unitSym})`;
+            yAxisUnitLabel.textContent = unitSym;
+
+            // Update default scale limits and liquid water zone annotation for unit
+            let defaultMin = 100, defaultMax = 500;
+            let waterMin = 273, waterMax = 373;
+
+            if (unit === 'C') {
+                defaultMin = -170; defaultMax = 230;
+                waterMin = 0; waterMax = 100;
+            } else if (unit === 'F') {
+                defaultMin = -280; defaultMax = 440;
+                waterMin = 32; waterMax = 212;
+            }
+
+            tempChart.options.scales.y.min = defaultMin;
+            tempChart.options.scales.y.max = defaultMax;
+            tempChart.options.plugins.annotation.annotations.liquidWaterZone.yMin = waterMin;
+            tempChart.options.plugins.annotation.annotations.liquidWaterZone.yMax = waterMax;
+
+            syncLimitInputs();
+            updateSimulation();
+        });
+
+        // Helper to update point markers when within or off graph bounds
+        function updateScatterDataset(dsIndex, d, tempKVal, normalStyle, baseRadius, triangleRadius) {
+            const unit = unitSelect.value;
+            const convertedTemp = convertFromK(tempKVal, unit);
+            const yMin = tempChart.options.scales.y.min;
+            const yMax = tempChart.options.scales.y.max;
+            const ds = tempChart.data.datasets[dsIndex];
+
+            let renderY = convertedTemp;
+            let style = normalStyle;
+            let radius = baseRadius;
+            let rotation = 0;
+
+            if (convertedTemp > yMax) {
+                renderY = yMax;
+                style = 'triangle';
+                radius = triangleRadius;
+                rotation = 0; // Upward triangle
+            } else if (convertedTemp < yMin) {
+                renderY = yMin;
+                style = 'triangle';
+                radius = triangleRadius;
+                rotation = 180; // Downward triangle
+            }
+
+            ds.data = [{ x: d, y: renderY, realY: convertedTemp }];
+            ds.pointStyle = style;
+            ds.pointRadius = radius;
+            ds.pointHoverRadius = radius + 2;
+            ds.pointRotation = rotation;
+            ds.rotation = rotation;
+            
+            return renderY;
+        }
+
+        function updateSimulation(activeSource = 'dist') {
+            const albedoActive = albedoCheck.checked;
+            const greenhouseActive = greenhouseCheck.checked;
+            const unit = unitSelect.value;
+
+            const L = parseFloat(controls[0].input.value) || 1;
+            const d = parseFloat(controls[1].input.value) || 1;
+            
+            const A = albedoActive ? (parseFloat(controls[2].input.value) || 0) / 100 : 0;
+            const G = greenhouseActive ? (parseFloat(controls[3].input.value) || 0) / 100 : 0;
+
+            const T_bb = BASE_TEMP_1_AU * Math.pow(L, 0.25) / Math.pow(d, 0.5);
+            const T_eff = T_bb * Math.pow(1 - A, 0.25);
+            const G_safe = Math.min(G, 0.999); 
+            const T_surf = T_eff * Math.pow(1 / (1 - G_safe), 0.25);
+
+            // Update top text displays
+            document.getElementById('valBaseline').textContent = formatTemp(T_bb, unit);
+            document.getElementById('valEffective').textContent = formatTemp(T_eff, unit);
+            document.getElementById('valSurface').textContent = formatTemp(T_surf, unit);
+
+            // Update baseline curve
+            tempChart.data.datasets[0].data = generateLineData(L, unit);
+
+            // Update scatter point markers with off-graph triangle logic
+            // Sizing hierarchy for off-graph triangles: Black (13) > Blue (9) > Red (5)
+            const rY_bb = updateScatterDataset(1, d, T_bb, 'circle', 8, 13);
+            
+            let rY_eff = null;
+            if (albedoActive) {
+                rY_eff = updateScatterDataset(2, d, T_eff, 'rectRot', 8, 9);
+            } else {
+                tempChart.data.datasets[2].data = [];
+            }
+
+            let rY_surf = null;
+            if (greenhouseActive) {
+                rY_surf = updateScatterDataset(3, d, T_surf, 'rect', 8, 5);
+            } else {
+                tempChart.data.datasets[3].data = [];
+            }
+
+            // Build dynamic marker label box list
+            const labelsToDraw = [];
+
+            // a) Baseline marker label box
+            labelsToDraw.push({
+                x: d,
+                y: rY_bb,
+                text: `Distance: ${d.toFixed(2)} AU, baseline temperature ${formatTemp(T_bb, unit)}`,
+                color: 'black'
+            });
+
+            // b) Reflection marker label box
+            if (albedoActive && rY_eff !== null) {
+                labelsToDraw.push({
+                    x: d,
+                    y: rY_eff,
+                    text: `Reflects ${controls[2].input.value}%, expected temperature ${formatTemp(T_eff, unit)}`,
+                    color: 'blue'
+                });
+            }
+
+            // c) Greenhouse marker label box
+            if (greenhouseActive && rY_surf !== null) {
+                labelsToDraw.push({
+                    x: d,
+                    y: rY_surf,
+                    text: `Greenhouse ${controls[3].input.value}%, surface temperature ${formatTemp(T_surf, unit)}`,
+                    color: 'red'
+                });
+            }
+
+            tempChart.markerLabels = labelsToDraw;
+            tempChart.update();
+
+            playSonification(T_bb, T_eff, T_surf, activeSource);
+        }
+
+        function applyManualLimits() {
+            tempChart.options.scales.x.min = parseFloat(xMinInput.value);
+            tempChart.options.scales.x.max = parseFloat(xMaxInput.value);
+            tempChart.options.scales.y.min = parseFloat(yMinInput.value);
+            tempChart.options.scales.y.max = parseFloat(yMaxInput.value);
+            updateSimulation();
+        }
+
+        function syncLimitInputs() {
+            xMinInput.value = tempChart.options.scales.x.min;
+            xMaxInput.value = tempChart.options.scales.x.max;
+            yMinInput.value = tempChart.options.scales.y.min;
+            yMaxInput.value = tempChart.options.scales.y.max;
+        }
+
+        function downloadChart() {
+            const link = document.createElement('a');
+            link.download = 'planetary_temperature_graph.png';
+            link.href = tempChart.toBase64Image();
+            link.click();
+        }
+
+        // Global App Reset (Top Header Reset Button)
+        document.getElementById('resetAppBtn').addEventListener('click', () => {
+            controls[0].slider.value = 1.0; controls[0].input.value = "1.00";
+            controls[1].slider.value = 1.0; controls[1].input.value = "1.00";
+            controls[2].slider.value = 30;  controls[2].input.value = "30";
+            controls[3].slider.value = 33;  controls[3].input.value = "33";
+            
+            albedoCheck.checked = false;
+            greenhouseCheck.checked = false;
+            document.getElementById('showLabelsCheck').checked = true;
+            
+            unitSelect.value = 'K';
+            yAxisUnitLabel.textContent = 'K';
+            tempChart.options.scales.y.title.text = 'Temperature (K)';
+            tempChart.options.scales.x.min = 0.2;
+            tempChart.options.scales.x.max = 5.0;
+            tempChart.options.scales.y.min = 100;
+            tempChart.options.scales.y.max = 500;
+            tempChart.options.plugins.annotation.annotations.liquidWaterZone.yMin = 273;
+            tempChart.options.plugins.annotation.annotations.liquidWaterZone.yMax = 373;
+
+            updateCheckboxUIStates();
+            resetGraphZoom();
+        });
+
+        // ---------------------------------------------------------------------------------
+        // WEB AUDIO API SONIFICATION
+        // ---------------------------------------------------------------------------------
+        let audioCtx;
+        let isMuted = true;
+        
+        let oscPiano, oscFlute, oscViolin;
+        let gainPiano, gainFlute, gainViolin, masterGain;
+        let fadeTimeout;
+
+        const MIDDLE_C_HZ = 261.63;
+
+        function initAudio() {
+            if (audioCtx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+
+            masterGain = audioCtx.createGain();
+            masterGain.connect(audioCtx.destination);
+            masterGain.gain.value = 0;
+
+            oscPiano = audioCtx.createOscillator();
+            oscPiano.type = 'triangle';
+            gainPiano = audioCtx.createGain();
+            gainPiano.gain.value = 0;
+            oscPiano.connect(gainPiano).connect(masterGain);
+            oscPiano.start();
+
+            oscFlute = audioCtx.createOscillator();
+            oscFlute.type = 'sine';
+            gainFlute = audioCtx.createGain();
+            gainFlute.gain.value = 0;
+            oscFlute.connect(gainFlute).connect(masterGain);
+            oscFlute.start();
+
+            oscViolin = audioCtx.createOscillator();
+            oscViolin.type = 'sawtooth';
+            gainViolin = audioCtx.createGain();
+            gainViolin.gain.value = 0;
+            oscViolin.connect(gainViolin).connect(masterGain);
+            oscViolin.start();
+        }
+
+        function tempToFreq(temp) {
+            let octaves;
+            if (temp >= 285) {
+                octaves = 2 * ((temp - 285) / (1000 - 285));
+            } else {
+                octaves = 2 * ((temp - 285) / (285 - 10));
+            }
+            return MIDDLE_C_HZ * Math.pow(2, octaves);
+        }
+
+        function playSonification(tBase, tEff, tSurf, activeSource) {
+            if (isMuted || !audioCtx) return;
+
+            oscPiano.frequency.setTargetAtTime(tempToFreq(tBase), audioCtx.currentTime, 0.05);
+            oscFlute.frequency.setTargetAtTime(tempToFreq(tEff), audioCtx.currentTime, 0.05);
+            oscViolin.frequency.setTargetAtTime(tempToFreq(tSurf), audioCtx.currentTime, 0.05);
+
+            gainPiano.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainFlute.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainViolin.gain.cancelScheduledValues(audioCtx.currentTime);
+            clearTimeout(fadeTimeout);
+
+            let volP = 0.1, volF = 0.1, volV = 0.1;
+            
+            if (activeSource === 'dist') {
+                volP = 0.6; 
+            } else if (activeSource === 'albedo') {
+                volF = 0.6; 
+            } else if (activeSource === 'greenhouse') {
+                volV = 0.5; 
+            } else if (activeSource === 'lum') {
+                volP = 0.4;
+                volF = 0.4;
+                volV = 0.12; 
+            }
+
+            gainPiano.gain.setTargetAtTime(volP, audioCtx.currentTime, 0.03);
+            gainFlute.gain.setTargetAtTime(volF, audioCtx.currentTime, 0.03);
+            gainViolin.gain.setTargetAtTime(volV, audioCtx.currentTime, 0.03);
+
+            fadeTimeout = setTimeout(() => {
+                gainPiano.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                gainFlute.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                gainViolin.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+            }, 500);
+        }
+
+        document.getElementById('muteBtn').addEventListener('click', function() {
+            if (isMuted) {
+                initAudio();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.1);
+                isMuted = false;
+                this.textContent = 'Mute Sound';
+            } else {
+                masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                isMuted = true;
+                this.textContent = 'Unmute Sound';
+            }
+        });
+
+        // Modals Logic
+        const infoModal = document.getElementById('infoModal');
+        const soundInfoModal = document.getElementById('soundInfoModal');
+        const aboutModal = document.getElementById('aboutModal');
+
+        document.getElementById('infoBtn').onclick = () => infoModal.style.display = 'flex';
+        document.getElementById('soundInfoBtn').onclick = () => soundInfoModal.style.display = 'flex';
+        document.getElementById('aboutBtn').onclick = () => aboutModal.style.display = 'flex';
+
+        document.getElementById('closeInfoModal').onclick = () => infoModal.style.display = 'none';
+        document.getElementById('closeSoundModal').onclick = () => soundInfoModal.style.display = 'none';
+        document.getElementById('closeAboutModal').onclick = () => aboutModal.style.display = 'none';
+
+        window.onclick = (e) => { 
+            if (e.target === infoModal) infoModal.style.display = 'none'; 
+            if (e.target === soundInfoModal) soundInfoModal.style.display = 'none'; 
+            if (e.target === aboutModal) aboutModal.style.display = 'none'; 
+        };
+
+        updateCheckboxUIStates();
+    </script>
+</body>
+</html>
