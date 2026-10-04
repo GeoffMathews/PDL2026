@@ -1,0 +1,245 @@
+<html> 
+<head>
+<title>PDL 2024 - 2026, spring quarters, Materials catalog</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-bar-block .w3-bar-item {padding:20px}
+    
+    body {
+    margin: 20px; 
+}
+</style>
+    
+    
+</head>
+<body>
+
+    <h1>PDL materials catalog (Geoff Mathews, '24 - '26 spring quarters)</h1>
+    
+    <p>These are resources created or used to make screenshots and screengrabs used in the review videos created for this PDL.</p>
+    
+    
+
+    <h2>Interpreting thermal spectra </h2>
+    
+<ul>
+    <li>Spectra</li>
+    <ul>
+        <li>Python scripts for producing the following plots (<a href="C10-thermal-spectra/thermal_spectra.ipynb" target="_blank">code</a>)</li>
+        <li>Comparison spectra of two mystery objects.  Each spectrum is calculated using the Planck function, then arbitrarily scaled to create desired brightness ratio (in this case, making the hotter object dimmer, so as to confront a common misconception that brighter objects must be hotter).  <img src="C10-thermal-spectra/thermal_spectra_AB.jpg" alt="Thermal spectra of two objects, a dim one peaking around 350 nm and a bright one peaking around 800 nm" width="300"></li>
+        <li>Comparison spectra of three mystery objects, as above but allowing for multiple comparisons that will still confront the "brightness = temperature misconception" (not used in final video) <img src="C10-thermal-spectra/thermal_spectra_ABC.jpg" alt="Thermal spectra of three objects.  The dimmest peaks around 550 nm, the middle brightness one peaks at about 400 nm, and the brightest one peaks around  950 nm" width="300"></li>
+    </ul>
+    
+    <li>Photographs</li>
+    <ul>
+        <li>Visible spectrum of a warm incandescent lamp (not used in final video).  Diffraction grating was held over camera lens while taking the photo, so that the direct by-eye view of the lamp is on the left and the spectrum is on the right.  <img src="C10-thermal-spectra/hotdog-lamp-hot.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing faint green, yellow, orange, and red" width="300"></li>
+        <li>Visible spectrum of a hot incandescent lamp  (not used in final video).  Diffraction grating was held over camera lens while taking the photo, so that the direct by-eye view of the lamp is on the left and the spectrum is on the right.  <img src="C10-thermal-spectra/hotdog-lamp-hotter.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing bright violet, blue, green, yellow, orange, and red" width="300"></li>
+    </ul>
+
+
+<li>Simulations </li>
+    <ul>
+        <li><a href="https://foothillastrosims.github.io/Spectrum-Constructor/" target="_blank">Spectrum constructor</a> (screenshot used for initial graphic in video) allows user to build an arbitrary spectrum including thermal, flat, or no continuous emission, add emission and absorption lines, and Doppler shift.  It presents how the object would appear by eye (the blend of colors), through a diffraction grating (which disperses the light by wavelength),  and through a spectrometer.  This was originally developed as part of the Foothill AstroSims project (<a href="https://github.com/FoothillAstroSims/Spectrum-Constructor" target="_blank")>source</a>).</li>
+        <li><a href="C10-thermal-spectra/star_spectrum_embeddable.html" target="_blank">Stellar spectrum simulator</a> focusing on how the temperature and size of a star determine its spectrum and luminosity (developed using Geminin, <a href="C10-thermal-spectra/Star_Spectrum_Simulation_with_HTML.pdf" target="_blank")>prompts for first draft</a>, more feature-full simulation, and <a href="C10-thermal-spectra/Simplified_Astronomy_Simulator_Interface.pdf" target="_blank")>prompts to refine the interface</a>).</li>
+    </ul>       
+
+</ul>
+    
+    
+    <h2>Calculating stellar lifespans </h2>
+    
+    <ul>
+    <li>Stellar lifespan calculator <a href=https://foothillastrosims.github.io/stellar-lifespan/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/stellar-lifespan target=_blank>source</a> (originally developed for Foothill AstroSims and revised for use in making animations, but dropped from final video).  Shows a model star next to a model of the sun, on a balance that shifts to help emphasize relative mass of the two.  The luminosity is also adjustable, and is represented by changing the relative brightness of the model.  A Play button simulates time passing (1 billion years per second), with a Fuel Percentage displayed above the model star and the sun to help compare the relative rate of fuel usage.  </li>
+    <li>Star graphics were edited from NASA resource "The Lives of Stars" (<a href=https://science.nasa.gov/resource/the-lives-of-stars/ target=_blank>original</a>)</li>
+    
+</ul>
+    
+    <h2>Cepheid period-luminosity relation </h2>
+    
+    <ul>
+    <li>Cepheid Property explorer <a href=https://foothillastrosims.github.io/cepheid-lightcurve/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/cepheid-lightcurve target=_blank>source</a>, used for screen-grab of an example light-curve.  Shows how measured properties of a Cepheid star change as it pulsates, changing luminosity, size, and surface temperature over time.  User can select which property (defaults to luminosity, which is the most direct observable).  The simulation uses V-band magnitudes, based on the empirical model presented in Pejcha and Kochanek, 2012, as a proxy for overall luminosity, with appropriate conversation to present luminosity as a ratio to the sun's luminosity for ease of interpretation in a non-specialist environment.  </li>
+    <li>Python <a href="Cepheid_model.ipynb" target=_blank>Jupyter notebook</a> for producing graphs based on Cepheid models of <a href="https://iopscience.iop.org/article/10.1088/0004-637X/748/2/107/meta" target="_blank">Pejcha and Kochanek, 2012</a></li>
+        <ul>
+            <li>V-band period-luminosity relation (simplified labelling for use in video).  Uses empirical model to calculate mean V-band magnitude by period, and converts to a brightness ratio to the sun.  Labelling is simplified to avoid including distracting details.  <img src="C2-Cepheid-PL/Cepheid_period_Vband_relation_noCite_simplifiedLabel.jpg" alt="Cepheid period luminosity relation, simplified" width="300"></li>
+            <li>lightcurve comparison for a 10 and a 25 day period Cepheid (not used in final video).  Calculation of V-band brightness vs. time for two Cepheid stars, one with a period of 20 days and the other with a period of 10 days.  <img src="C2-Cepheid-PL/Cepheid_lightcurve_comparison_10_25_days.jpg" alt="lightcurves for Cepheid stars with periods of 10 and 25 days, with average luminosities about 3000 and about 7500 times the sun" width="300"></li>
+            <li>period-luminosity relation (not used in final video).  Uses empirical model to calculate mean luminosity (across all wavelengths) by period, and converts to a brightness ratio to the sun.  Labelling is simplified to avoid including distracting details.  <img src="C2-Cepheid-PL/Cepheid_period_luminosity_relation.jpg" alt="Cepheid period luminosity relation" width="300"></li>
+            <li>V-band period-luminosity relation (not used in final video).  Same as the first figure, but with more complete labelling (including citation to origianl data source). <img src="C2-Cepheid-PL/Cepheid_period_Vband_relation.jpg" alt="Cepheid period luminosity relation, V-band" width="300"></li>
+        </ul>
+    <li>Observations of Cepheid BASW1 (first Cepheid identified in the Andromeda galaxy)</li>
+        <ul>
+            <li>g-band postage stamps downloaded from <a href="https://irsa.ipac.caltech.edu/applications/ztf/?__action=layout.showDropDown&" target="_blank">ZTF archive</a>, selecting images from 06/02 - 08/30, 2018 (<a href="C2-Cepheid-PL/images.zip" target="_blank">download</a>)</li>
+            <li>used <a href="https://sites.google.com/cfa.harvard.edu/saoimageds9" target="_blank">DS9</a> to manually create animation and frame-mosaic of images</li>
+            <li>animation of BASW1 observations, centered on BASW1 but including nearby stars for comparison.  Shows June 5 through August 18, two full cycles of the star.  <img src="C2-Cepheid-PL/BASW1_multi_cycle.gif" alt="100 day timelapse of variable star BASW1" width="300"></li>
+            <li>mosaic of BASW1 observations.  Shows the same dates as the animated gif.   <img src="C2-Cepheid-PL/BASW1_mosaic.jpg" alt="100 day mosaic of variable star BASW1" width="300"></li>
+            <li><a href="C2-Cepheid-PL/BASW1-lightcurve.fits" target="_blank">lightcurve file</a> generated using <a href="https://irsa.ipac.caltech.edu/applications/Gator/index.html" target="_blank">ZTF catalog search</a>, data selection, and export of data to Time-Series tool </li>
+            <li>Python <a href="C2-Cepheid-PL/Cepheid_lightcurve.ipynb" target=_blank>Jupyter notebook</a> for producing lightcurve graphs of BASW1</li>
+            <li>100 day lighcurve of BASW1, in g-band, converting magnitudes to relative brightness (each 1 magnitude difference is approximately a factor of 2.5 in brightness).  <img src="C2-Cepheid-PL/BASW1_lightcurve_100days.jpg" alt="100 day lightcurve of BASW1" width="300"></li>
+
+        </ul>
+         
+
+</ul>
+    
+    
+    <h2>Using standard candles </h2>
+    <ul>
+    <li>Spectrum graphic</li>
+    <ul>
+        <li>Python <a href="C3-standard-candles/SpT-chart.ipynb" target=_blank>Jupyter notebook</a> for producing main-sequence spectral-type spectra based on sample code provided by the International Astronomical Union Office of Education <a href="https://github.com/astro4edu/stellar_spectra_plots" target="_blank">(original)</a></li>
+        <li>spectra for main sequence stars from spectral type M to O, as seen by eye with a diffraction grating.  Overall color gradients represent the underlying thermal spectrum (hotter things are relatively brighter at short wavelengths), with each spectrum scaled to itself (so its brightest wavelength is shown with maximum brightness).  Absorption line profiles (dark bands) are simplified to just the most noticeable absorption features (H, He, Ca, Na, Fe, TiO). <img src="C3-standard-candles/spectral_types.jpg" alt="Spectra of stars, from spectral type M to O" width="300"></li>
+    </ul>
+    <li>HR diagram</li>
+    <ul>
+        <li>Python <a href="C3-standard-candles/HR-diagram.ipynb" target=_blank>Jupyter notebook</a> for producing HR diagram based on sample code provided by the International Astronomical Union Office of Education <a href="https://github.com/astro4edu/hr_diagram_plots" target="_blank">(original)</a></li>
+        <li>HR diagram (graph of star luminosity vs. temperature) with categories and a few sample stars highlighted.  Colors represent how each star would appear by-eye if we were close enough to register its color (most stars, by eye, are only bright enough to trigger our color-insensitive rods).  <img src="C3-standard-candles/HR-diagram-modified.jpg" alt="HR diagram, showing the temperature and luminosity of a sampling of nearby stars" width="300"></li>
+        <li>schematic HR diagram showing the main sequence, with stellar masses indicated (unused in video).  <img src="C3-standard-candles/HR-diagram-schematic.jpg" alt="HR diagram, showing the temperature and luminosity of stars along the main sequence" width="300"></li>
+
+    </ul>
+    
+    <li>Cepheid period-luminosity relation</li>
+    <ul>
+        <li>Cepheid lightcurve is a screengrab from the Cepheid Property explorer <a href=https://foothillastrosims.github.io/cepheid-lightcurve/ target=_blank>simulation</a>, <a href=https://github.com/FoothillAstroSims/cepheid-lightcurve target=_blank>source</a></li>
+        <li>V-band period-luminosity relation (with simplified labelling for use in video)  <img src="C3-standard-candles/Cepheid_period_Vband_relation_noCite_simplifiedLabel.jpg" alt="Cepheid period luminosity relation, simplified" width="300"></li>
+    </ul>         
+
+</ul>
+    
+    <h2>Galaxy size from globular cluster distribution </h2>
+    
+<ul>
+    <li>Browser-based simulations of parameterized distributions</li>
+    <ul>
+        <li>3D simulation, allowing view from multiple perspectives.  One can adjust the overall size, distance of the observer from the galactic center, the number of globular clusters, and how concentrated the globular clusters are in the model.  Using the mouse (click-and-drag to change viewing direction, mouse-wheel to move back / forward) or location pre-set buttons, one can view the distribution of globular clusters from different locations. (<a href="https://foothillastrosims.github.io/globularcluster3d/" target="_blank">simulation</a>, <a href="https://github.com/FoothillAstroSims/globularcluster3d" target="_blank">code</a>)
+        </li>
+        <li>"radar-view"-only simulation, allowing a view matching Earth-centric mapping.  This is usable to produce graphics for use in class and on assessments, as well (<a href="https://foothillastrosims.github.io/globularclustermap/" target="_blank">simulation</a>, <a href="https://github.com/FoothillAstroSims/globularclustermap" target="_blank">code</a>)
+        </li>
+    </ul>
+    
+    <li>Representations of our galaxy's globular clusters</li>
+    <ul>
+        <li>Milky Way Globular cluster information was downloaded from NASA's HEASARC research group (<a href="https://heasarc.gsfc.nasa.gov/w3browse/all/globclust.html" target="_blank">documentation</a>, <a href="https://physics.mcmaster.ca/~harris/Databases.html" target="_blank">file download</a>)
+        </li>
+        <li>Map of globular clusters as measured from Earth, produced using Python (<a href="C4-globular-clusters/globular_cluster_map.ipynb" target="_blank">code</a>).  Map shows the distance of each globular cluster from Earth, and its direction, projected onto the galactic plane (i.e., a top-down view). <img src="C4-globular-clusters/milky_way_globular_clusters.jpg" alt="Map of Milky Way globular clusters, direction and distance as measured from Earth" width="300"></li>
+         <li>Blank map of globular clusters as measured from Earth, produced using Python (<a href="C4-globular-clusters/globular_cluster_map.ipynb" target="_blank">code</a>).  <img src="C4-globular-clusters/galaxy_plot_blank.jpg" alt="Blank map of direction and distance as measured from Earth"  width="300"></li>       
+    </ul>
+
+</ul>
+        
+    <h2>Expansion history from Hubble plots </h2>
+    
+<ul>
+    <li>Hubble plots</li>
+    <ul>
+        <li>Python scripts for producting the following plots (<a href="C5-expansion-history/Hubble_plot.ipynb" target="_blank">code</a>, <a href="C5-expansion-history/Riess2004_Hubble_SN1a.tsv" target="_blank">datafile</a> retrieved from <a href="https://vizier.cfa.harvard.edu/viz-bin/VizieR-3?-source=J/ApJ/607/665&-out.max=50&-out.form=HTML%20Table&-out.add=_r&-out.add=_RAJ,_DEJ&-sort=_r&-oc.form=sexa" target="_blank">Vizier Astronomical Server</a>)</li>
+        <li>Blank Hubble plot, showing the apparent recession speed of a galaxy vs. its distance from us. <img src="C5-expansion-history/Hubble_plot_blank_speed_as_c.jpg" alt="blank Hubble plot, showing speed as percentage of c" width="300"></li>
+        <li>Hubble plot showing Supernova type 1A measurements from Riess et al, 2004.  Catalog values for redshift and distance were converted to less technical terms, percentage of speed of light and distances in millions of light-years.  <img src="C5-expansion-history/Hubble_plot_Riesss_SN1a_2004.jpg" alt="Hubble plot of 1a supernovas out to 1.6 billion light-years" width="300"></li>
+        <li>Hubble plot showing Supernova type 1A measurements from Riess et al, 2004, gray for overlays<img src="C5-expansion-history/Hubble_plot_Riess_2004_gray.jpg" alt="" width="300"></li>
+        <li>Model Hubble plot for a simulated expansion history.  This illustrates a universe that has had much more dramatic (and clearly visible by eye) changes in the expansion rate, starting with a medium, then a slow, and finally a fast expansion rate.  <img src="C5-expansion-history/Hubble_plot_model_a.jpg" alt="" width="300"></li>
+    </ul>
+    <li>Simulations (all done with Netlogo, code is available under the Netlogo code tab for each)</li>
+    <ol>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-expansion.html" target="_blank">Cosmological Expansion</a>, not used in review.  Allows users to qualitatively explore how differences in initial separation and differences in expansion rate lead to the changing distance between a pair of galaxies.  </li>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-expansion-rate.html" target="_blank">Cosmological Expansion, with graphs</a>, not used in review.  Similar to the first model, but with graphs to help track the separation and apparent velocity over time, and a third graph to compare those two dependent variables against each other.  </li>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-expansion-multi.html" target="_blank">Cosmological Expansion with Multiple Galaxies</a>, not used in review.  Similar concept, but now showing how multiple galaxies appear from the perspective of an observer, with optional marks placed each billion years in the simulation to help illustrate the increase in recession velocity wih distance.  </li>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-redshift-multi-high-resolution.html" target="_blank">Cosmological Expansion with Multiple Galaxies and Redshifting Photons</a>, used in review.  Simulation showing a number of galaxies being carried away from an observer by the epansion of space.  Each galaxy emits photons towards the observer, and their relative motion and redshifting is tracked (again, taking into account the expansion of space).  When each photon reaches the observer on the left, its redshift is converted to an apparent speed (via Doppler-shift equation), and its initial distance is plotted.  The ability to pause and clear the plot allows for simulation of an observers' experience - i.e., we only detect and measure the photons that are reaching us now, rather than all the photons that have ever been sent to Earth - and thus, this can be used to simulate our observations of redshifts of distant objects and even qualitatively re-create (by changing the expansion rate) the observed change in the slope of the Hubble plot.  </li>
+    </ol>    
+</ul>    
+    
+    
+    <h2>Age of the universe </h2>
+    
+<ul>
+    <li>Hubble plots</li>
+    <ul>
+        <li>Python scripts for producting the following plots (<a href="C6-universe-age/Hubble_plot.ipynb" target="_blank">code</a>, <a href="C6-universe-age/Freedman2001_Cepheid.csv" target="_blank">Cepheid datafile</a> and <a href="C6-universe-age/Freedman2001_SN1A.csv" target="_blank">Supernova 1A datafile</a> from <a href="https://ui.adsabs.harvard.edu/abs/2001ApJ...553...47F/abstract" target="_blank">Freedman et al 2001</a></li>
+        <li>Blank Hubble plot, showing apparent recession speed in units of km/s and distance in millions of light-years.  Useful for sketching plots, or to use on assignments where students sketch <img src="C6-universe-age/Hubble_plot_blank.jpg" alt="blank Hubble plot, showing recession speed in km/s vs distance in millions of light-years" width="300"></li>
+        <li>Hubble plot showing Cepheid measurements.  These objects are the Cepheids in nearby glaxies that were instrumental to discovering the expansion of the universe (Edwin Hubble's 1929 sample), though with modern measurements taking into account additional details later figured out for converting Cepheid periods to luminosities. <img src="C6-universe-age/Hubble_plot_Cepheids.jpg" alt="Hubble plot of local Cepheids, using modern values with Hubble's sample" width="300"></li>
+        <li>Hubble plot adding in Supernova type 1A measurements.  These extend the distance scale from 100 million to 1.6 billion light-years, illustrating that the pattern which is spotted among nearby galaxies extends much further.  The sample was truncated to a relatively short distance to emphasize values useful for calculating the age of the universe, and avoiding the distraction of the changing expansion rate (an effect that is small enough to not dramatically change the result of the approximation taught here, but noticable enough to distract students) <img src="C6-universe-age/Hubble_plot_SN1A.jpg" alt="Hubble plot including white dwarf supernovas" width="300"></li>
+        <li>Combined dataset, displaying speed as ly / y so as to simplify calculations for students. <img src="C6-universe-age/Hubble_plot_all_data_ly_y.jpg" alt="Hubble plot with y-axis converted to light-years per year" width="300"></li>
+        <li>Model Hubble plot for a simulated expansion history to compare to our actual history.  <img src="C6-universe-age/Hubble_plot_all_data_vs_old.jpg" alt="Hubble plot with comparison of actual data to simulated data" width="300"></li>
+    </ul>
+    <li>Simulations (created in Netlogo, code is available under the Netlogo code tab)</li>
+    <ol>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-redshift-multi-high-resolution.html" target="_blank">Cosmological Expansion with Multiple Galaxies and Redshifting Photons</a>.  Simulation showing a number of galaxies being carried away from an observer by the epansion of space.  Each galaxy emits photons towards the observer, and their relative motion and redshifting is tracked (again, taking into account the expansion of space).  When each photon reaches the observer on the left, its redshift is converted to an apparent speed (via Doppler-shift equation), and its initial distance is plotted.  The ability to pause and clear the plot allows for simulation of an observers' experience - i.e., we only detect and measure the photons that are reaching us now, rather than all the photons that have ever been sent to Earth - and thus, this can be used to simulate our observations of redshifts of distant objects and even qualitatively re-create (by changing the expansion rate) the observed change in the slope of the Hubble plot.   </li>
+    </ol>    
+</ul>    
+
+    <h2>Mass of galaxy clusters from lensing </h2>
+    
+<ul>
+
+    <li>Simulations</li>
+    <ol>
+        <li><a href="https://geoffmathews.github.io/PDL2026/C8-lensing-mass/Gravitational-lensing-illustrative-model.html" target="_blank">Gravitational lensing simulation</a> focusing on forward modeling of lensing, rather than only tracing the paths that reach us (<a href="C8-lensing-mass/prompts - Gravitational Lensing forward modeling.pdf" target="_blank")>prompts</a>).  This simulation focuses on visualizing the multiple paths followed by light from the original source, and the role that an intervening mass can play in shifting light that was originally on a path to the observer to a different path, while causing light that would have originally missed the observer to end up reaching them, but from directions that create the illusion of the distant light source being at different locations.  This simulation includes multiple tools aimed at its use for creating visualizations (adjust scaling, displaying or hiding numbers used in calculations, etc.).  This simulation was built using Gemini.</li>
+        <li><a href="https://foothillastrosims.github.io/gravitational-lensing/" target="_blank">Original gravitational lensing simulation</a> (used in draft video, but not in final video) tracing the paths of photons that reach us via gravitational lensing (<a href="https://github.com/FoothillAstroSims/gravitational-lensing" target="_blank")>source</a>).  Initial visualization familiarizes the user with the interface, and how the lower part of the view represents what is observed from Earth.  Adding a cluster introduces gravitational lensing by that cluster, with the visualization at the bottom showing the multiple images of the distant source (though simplified to not include distortion introduced, as well).  This simulation was originally developed as part of the Foothill AstroSims project, designed by Geoff Mathews and programmed by Andrew Tran.</li>
+    </ol>    
+</ul>    
+    
+    <h2>Temperature of the universe </h2>
+    
+<ul>
+    <li>Spectra</li>
+    <ul>
+        <li>Python scripts for producting the following plots (<a href="C7-universe-temperature/thermal_spectra_CMB.ipynb" target="_blank">code</a>)</li>
+        <li>3000 K, visible and near-IR.  Spectrum calculated using the Planck function for a 3000 K object at wvelengths from 300 to 3000 Kelvin, and color key calculated using standard conversions of wavelength to RGB color.  Spectrum is scaled to show relative brightness. <img src="C7-universe-temperature/thermal_spectra_3K_full.jpg" alt="Thermal spectrum, 3000 Kelvin, on a linear-linear scale from 400 to 3000 nanometers" width="300"></li>
+        <li>3000 K.  Wavelengths from 200 nm to 30 mm are shown, using a log-scale (so that the progression over time can be tracked). <img src="C7-universe-temperature/thermal_spectra_compare_logx_3kK.jpg" alt="Thermal spectrum, 3000 Kelvin, on a log-linear scale" width="300"></li>
+        <li>300 K vs. 3000K <img src="C7-universe-temperature/thermal_spectra_compare_logx_300K.jpg" alt="Thermal spectrum, 300 Kelvin, on a log-linear scale" width="300"></li>
+        <li>30 K <img src="C7-universe-temperature/thermal_spectra_compare_logx_030K.jpg" alt="Thermal spectrum, 30 Kelvin, on a log-linear scale" width="300"></li>
+        <li>3 K <img src="C7-universe-temperature/thermal_spectra_compare_logx_003K.jpg" alt="Thermal spectrum, 3 Kelvin, on a log-linear scale" width="300"></li>
+        <li>0.3 K <img src="C7-universe-temperature/thermal_spectra_compare_logx_0p3K.jpg" alt="Thermal spectrum, 0.3 Kelvin, on a log-linear scale" width="300"></li>
+        <li>Our CMB, vs. a cooler universe.  A 2.7 K thermal spectrum is shown, as well as a 1K "mystery" spectrum, at wavelengths from 0.1 to 10 mm (log-scale). <img src="C7-universe-temperature/thermal_spectra_compare_2p7K_1K.jpg" alt="CMB spectrum compared to a myster spectrum (A)" width="300"></li>
+        <li>Our CMB, vs. a warmer universe.  A 2.7 K thermal spectrum is shown, as well as a 15K "mystery" spectrum, at wavelengths from 0.1 to 10 mm (log-scale). <img src="C7-universe-temperature/thermal_spectra_compare_2p7K_14K.jpg" alt="CMB spectrum compared to a myster spectrum (B)" width="300"></li>
+        
+    </ul>
+
+
+    <li>Simulation (written in Netlogo, code is available under the Netlogo code tab)</li>
+    <ul>
+        <li><a href="https://foothillastrosims.github.io/cosmological-expansion/cosmological-redshift-multi-with-multi-photon-and-spectrum" target="_blank">Simulation of "first-light" spectra</a> from material at a range of distances.  This is an illustrative simulation of how light began to be able to travel simultaneously throughout the universe when the expansion cooled matter down to 3000 K (prior to this time, light that was emitted was almost instantly destroyed through interactions with ionized matter).  It then shows how, as these first surviving spectra reach the observer, they will be increasingly redshifted (i.e., the first photons in the simulation have only been traveling for about 1 billion years, and so are only slightly redshifted.  But after a much greater period of time, the arriving photons will have traveled further and thus arrive more redshifted).  The ability to clear the plot allows the user to simulate the experience of a present day observer, who is not able to meausre the photons that arrived in the past or will arrive in the far future, but only those photons that are arriving right now.</li>
+    </ul>    
+</ul>
+    
+    <h2>Planetary habitability </h2>
+
+<ul>
+    <li>Planetary temperature plots</li>
+    <ul>
+        <li>Python scripts for producting the following plots (<a href="C9-planet-habitability/planet_temperature_plots.ipynb" target="_blank">code</a>)</li>
+        <li>baseline temperature.  Solid black line showing the equilibrium temperature for a perfect absorber at distances from 0.15 to 2 AU from the sun.  Mercury, Venus, Earth, and Mars are indicated on the graph with black dots. <img src="C9-planet-habitability/astrobio-solar-system-surface-temperatures-matchSim_1.jpg" alt="Baseline temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun" width="300"></li>        
+        <li>expected temperature.  Same figure, but with additional blue diamonds to indicated the effective temperature based on the percentage of incoming sunlight each planet reflects. <img src="C9-planet-habitability/astrobio-solar-system-surface-temperatures-matchSim_2.jpg" alt="Expected temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun and how much light they reflect" width="300"></li>        
+        <li>surface temperature.  Same figure, but with additional red squares to indicated the average surface temperature based on the percentage of outgoing infrared emissions each planet retains in its atmosphere (the greenhouse effect).  Venus is off the top of the figure, and marked with an upward pointing triangle and a label. <img src="C9-planet-habitability/astrobio-solar-system-surface-temperatures-matchSim.jpg" alt="Mean surface temperatures for the Mercury, Venus, Earth, and Mars based on their distance from the sun, how much light they reflect, and the strength of their greenhouse effect" width="300"></li>        
+    </ul>
+
+
+<li>Simulation</li>
+    <ol>
+        <li><a href="C9-planet-habitability/planetary_temperatures.html" target="_blank">Planet temperature simulator</a> focusing on forward modeling of surface tempearture based on distance, albedo, and greenhouse effect (developed using Google Gemini, <a href="C9-planet-habitability/Planetary_Temperature_Grapher_with_Slider.pdf" target="_blank")>prompts</a>).  User can adjust stellar luminosity, planet distance, albedo, and greenhouse effect.  The simulation also includes sonification of displayed properties.</li>
+    </ol>       
+</ul>
+    
+  <!-- Footer -->
+  <footer >
+    <div>
+        <hr>
+        <p>All content authored by Geoff Mathews.  Repositories at <a href = "https://github.com/GeoffMathews/PDL2026" target="_blank"> Github</a></p>
+      <p>HTML built using examples from <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.org</a> </p>
+        
+        PDL © 2026 by Geoff Mathews is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+        
+    </div>
+  
+  </footer>
+
+<!-- End page content -->
+
+<script>
+
+</script>
+
+</body>
+</html>
+
