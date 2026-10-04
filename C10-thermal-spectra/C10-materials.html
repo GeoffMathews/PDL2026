@@ -1,6 +1,6 @@
 <html> 
 <head>
-<title>materials for Calculating the temperature of the universe</title>
+<title>materials for Comparing the temperatures of two dense objects</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
@@ -17,29 +17,29 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 </head>
 <body>
 
-    <h1>Materials for Calculating the temperature of the universe</h1>
+    <h1>Materials for comparing the temperatures of two dense objects</h1>
     
-    <p>This page links to materials developed or refined as part of developing the review video + text for Calculating the temperature of the Universe. </p> 
+    <p>This page links to materials developed or refined as part of developing the review video + text for comparing the temperatures of dense objects. </p> 
 
 <ul>
     <li>Spectra</li>
     <ul>
         <li>Python scripts for producing the following plots (<a href="thermal_spectra.ipynb" target="_blank">code</a>)</li>
-        <li>Comparison spectra of two mystery objects <img src="thermal_spectra_AB.jpg" alt="Thermal spectra of two objects, a dim one peaking around 350 nm and a bright one peaking around 800 nm"></li>
-        <li>Comparison spectra of three mystery objects <img src="thermal_spectra_ABC.jpg" alt="Thermal spectra of three objects.  The dimmest peaks around 550 nm, the middle brightness one peaks at about 400 nm, and the brightest one peaks around  950 nm"></li>
-        <li>Continuous spectrum  of three mystery objects <img src="thermal_spectra_ABC.jpg" alt="Thermal spectra of three objects.  The dimmest peaks around 550 nm, the middle brightness one peaks at about 400 nm, and the brightest one peaks around  950 nm"></li>
+        <li>Comparison spectra of two mystery objects.  Each spectrum is calculated using the Planck function, then arbitrarily scaled to create desired brightness ratio (in this case, making the hotter object dimmer, so as to confront a common misconception that brighter objects must be hotter).  <img src="thermal_spectra_AB.jpg" alt="Thermal spectra of two objects, a dim one peaking around 350 nm and a bright one peaking around 800 nm"></li>
+        <li>Comparison spectra of three mystery objects, as above but allowing for multiple comparisons that will still confront the "brightness = temperature misconception" (not used in final video) <img src="thermal_spectra_ABC.jpg" alt="Thermal spectra of three objects.  The dimmest peaks around 550 nm, the middle brightness one peaks at about 400 nm, and the brightest one peaks around  950 nm"></li>
     </ul>
     
     <li>Photographs</li>
     <ul>
-        <li>Visible spectrum of a warm incandescent lamp<img src="hotdog-lamp-hot.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing faint green, yellow, orange, and red"></li>
-        <li>Visible spectrum of a hot incandescent lamp<img src="hotdog-lamp-hotter.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing bright violet, blue, green, yellow, orange, and red"></li>
+        <li>Visible spectrum of a warm incandescent lamp (not used in final video).  Diffraction grating was held over camera lens while taking the photo, so that the direct by-eye view of the lamp is on the left and the spectrum is on the right.  <img src="hotdog-lamp-hot.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing faint green, yellow, orange, and red"></li>
+        <li>Visible spectrum of a hot incandescent lamp  (not used in final video).  Diffraction grating was held over camera lens while taking the photo, so that the direct by-eye view of the lamp is on the left and the spectrum is on the right.  <img src="hotdog-lamp-hotter.jpg" alt="Photo of a long-filament incandescent lamp and its spectrum via diffraction grating, showing bright violet, blue, green, yellow, orange, and red"></li>
     </ul>
 
 
-<li>Simulation (developed using Google Gemini)</li>
+<li>Simulations </li>
     <ol>
-        <li><a href="star_spectrum_embeddable.html" target="_blank">Stellar spectrum simulator</a> focusing on how the temperature and size of a star determine its spectrum and luminosity (<a href="Star_Spectrum_Simulation_with_HTML.pdf" target="_blank")>prompts for original simulation</a>, and <a href="Simplified_Astronomy_Simulator_Interface.pdf" target="_blank")>prompts to refine the interface</a>).</li>
+        <li><a href="https://foothillastrosims.github.io/Spectrum-Constructor/" target="_blank">Spectrum constructor</a> (screenshot used for initial graphic in video) allows user to build an arbitrary spectrum including thermal, flat, or no continuous emission, add emission and absorption lines, and Doppler shift.  It presents how the object would appear by eye (the blend of colors), through a diffraction grating (which disperses the light by wavelength),  and through a spectrometer.  (<a href="https://github.com/FoothillAstroSims/Spectrum-Constructor" target="_blank")>source</a>).</li>
+        <li><a href="star_spectrum_embeddable.html" target="_blank">Stellar spectrum simulator</a> focusing on how the temperature and size of a star determine its spectrum and luminosity (developed using Geminin, <a href="Star_Spectrum_Simulation_with_HTML.pdf" target="_blank")>prompts for first draft</a>, more feature-full simulation, and <a href="Simplified_Astronomy_Simulator_Interface.pdf" target="_blank")>prompts to refine the interface</a>).</li>
     </ol>       
 
 </ul>
@@ -58,7 +58,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
   </footer>
 
 <!-- End page content -->
-</div>
 
 <script>
 // Script to open and close sidebar
